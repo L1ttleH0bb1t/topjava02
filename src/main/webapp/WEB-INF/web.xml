@@ -14,5 +14,14 @@
         <servlet-name>userServlet</servlet-name>
         <url-pattern>/users</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>userMealServlet</servlet-name>
+        <servlet-class>ru.javawebinar.topjava.web.UserMealServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>userMealServlet</servlet-name>
+        <url-pattern>/meals</url-pattern>
+    </servlet-mapping>
+    
 
 </web-app>
