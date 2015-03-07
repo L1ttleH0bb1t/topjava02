@@ -18,7 +18,7 @@ public class User extends NamedEntity {
 
     private boolean enabled = true;
 
-    private Date registered = new Date();
+    private Date registered;
 
     private Set<Role> authorities;
 
