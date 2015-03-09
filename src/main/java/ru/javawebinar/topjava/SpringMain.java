@@ -2,9 +2,12 @@ package ru.javawebinar.topjava;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ru.javawebinar.topjava.model.UserMeal;
+import ru.javawebinar.topjava.web.meal.UserMealRestController;
 import ru.javawebinar.topjava.web.user.AdminUserRestController;
 
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * User: gkislin
@@ -17,7 +20,15 @@ public class SpringMain {
             System.out.println("\n" + Arrays.toString(appCtx.getBeanDefinitionNames()) + "\n");
             AdminUserRestController adminController = appCtx.getBean(AdminUserRestController.class);
             adminController.delete(7);
-            adminController.getByMail("dummy");
+            //adminController.getByMail("dummy");
+            System.out.println("-----------------------------");
+            UserMealRestController userMealController = appCtx.getBean(UserMealRestController.class);
+            UserMeal userMeal = userMealController.create(new UserMeal("icecream", (short) 520, new Date(), LoggedUser.id()));
+            userMeal.setCalories((short) 450);
+            userMealController.update(userMeal);
+            userMealController.delete(2);
+            userMealController.getAll();
+            userMealController.get(1);
         }
     }
 }
