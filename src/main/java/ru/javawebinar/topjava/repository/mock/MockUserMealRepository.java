@@ -6,6 +6,7 @@ import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.repository.UserMealRepository;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ public class MockUserMealRepository implements UserMealRepository{
     @Override
     public UserMeal get(int id) {
         LOG.debug("get " + id);
-        return null;
+        return new UserMeal();
     }
 
     @Override
@@ -39,4 +40,12 @@ public class MockUserMealRepository implements UserMealRepository{
         LOG.debug("getAll " + userId);
         return Collections.emptyList();
     }
+
+    @Override
+    public List<UserMeal> filter(Date start, Date end) {
+        LOG.debug("filter " + start + " " + end);
+        return Collections.emptyList();
+    }
+
+
 }

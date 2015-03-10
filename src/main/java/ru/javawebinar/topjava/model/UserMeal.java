@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.model;
 
+import ru.javawebinar.topjava.LoggedUser;
+
 import java.util.Date;
 
 /**
@@ -17,14 +19,14 @@ public class UserMeal extends BaseEntity {
     private Integer userId;
 
     public UserMeal() {
-
+        this.userId = LoggedUser.id();
     }
 
-    public UserMeal(String meal, Short calories, Date date, Integer userId) {
+    public UserMeal(String meal, Short calories, Date date) {
         this.meal = meal;
         this.calories = calories;
         this.date = date;
-        this.userId = userId;
+        this.userId = LoggedUser.id();
     }
 
     @Override
@@ -65,7 +67,4 @@ public class UserMeal extends BaseEntity {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
 }

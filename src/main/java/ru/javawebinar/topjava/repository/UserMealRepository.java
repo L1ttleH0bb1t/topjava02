@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.repository;
 
 import ru.javawebinar.topjava.model.UserMeal;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,5 +18,7 @@ public interface UserMealRepository {
     public UserMeal get(int id);
 
     public List<UserMeal> getAll(int userId);
+
+    public List<UserMeal> filter(Date start, Date end);
 
 }

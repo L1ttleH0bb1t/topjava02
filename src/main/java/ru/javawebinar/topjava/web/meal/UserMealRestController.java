@@ -7,6 +7,7 @@ import ru.javawebinar.topjava.LoggerWrapper;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.service.UserMealServiceImpl;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,9 +44,13 @@ public class UserMealRestController {
     }
 
     public List<UserMeal> getAll() {
-        int id = LoggedUser.id();
         LOG.debug("getAll");
-        return service.getAll(id);
+        return service.getAll(LoggedUser.id());
+    }
+
+    public List<UserMeal> filter(Date start, Date end) {
+        LOG.debug("filter");
+        return service.filter(start, end);
     }
 
 }
