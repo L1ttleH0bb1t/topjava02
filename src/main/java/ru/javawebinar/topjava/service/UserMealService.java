@@ -11,16 +11,18 @@ import java.util.List;
  */
 public interface UserMealService {
 
-    public UserMeal save(UserMeal userMeal);
+    public UserMeal save(UserMeal userMeal, int userId);
 
-    public void delete(int id) throws NotFoundException;
+    public void delete(int id, int userId) throws NotFoundException;
 
-    public void update(UserMeal userMeal) throws NotFoundException;
+    public boolean deleteAll(int userId);
 
-    public UserMeal get(int id) throws NotFoundException;
+    public void update(UserMeal userMeal, int userId) throws NotFoundException;
+
+    public UserMeal get(int id, int userId) throws NotFoundException;
 
     public List<UserMeal> getAll(int userId);
 
-    public List<UserMeal> filter(Date start, Date end);
+    public List<UserMeal> filter(Date start, Date end, int userId);
 
 }

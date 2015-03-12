@@ -19,14 +19,20 @@ public class UserMeal extends BaseEntity {
     private Integer userId;
 
     public UserMeal() {
-        this.userId = LoggedUser.id();
+
+    }
+
+    public UserMeal(String meal, Short calories, Date date, Integer userId) {
+        this.meal = meal;
+        this.calories = calories;
+        this.date = date;
+        this.userId = userId;
     }
 
     public UserMeal(String meal, Short calories, Date date) {
         this.meal = meal;
         this.calories = calories;
         this.date = date;
-        this.userId = LoggedUser.id();
     }
 
     @Override
@@ -65,6 +71,10 @@ public class UserMeal extends BaseEntity {
 
     public Integer getUserId() {
         return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
 }

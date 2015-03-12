@@ -18,33 +18,39 @@ public class MockUserMealRepository implements UserMealRepository{
     private LoggerWrapper LOG = LoggerWrapper.get(MockUserMealRepository.class);
 
     @Override
-    public UserMeal save(UserMeal userMeal) {
+    public UserMeal save(UserMeal userMeal, int userId) {
         LOG.debug("save " + userMeal);
         return userMeal;
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(int id, int userId) {
         LOG.debug("delete " + id);
         return true;
     }
 
     @Override
-    public UserMeal get(int id) {
+    public UserMeal get(int id, int userId) {
         LOG.debug("get " + id);
         return new UserMeal();
     }
 
     @Override
     public List<UserMeal> getAll(int userId) {
-        LOG.debug("getAll " + userId);
+        LOG.debug("getAll");
         return Collections.emptyList();
     }
 
     @Override
-    public List<UserMeal> filter(Date start, Date end) {
+    public List<UserMeal> filter(Date start, Date end, int userId) {
         LOG.debug("filter " + start + " " + end);
         return Collections.emptyList();
+    }
+
+    @Override
+    public boolean deleteAll(int userId) {
+        LOG.debug("delete all");
+        return true;
     }
 
 

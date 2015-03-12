@@ -26,23 +26,23 @@ public class UserMealServiceImpl implements UserMealService{
     private UserMealRepository repository;
 
     @Override
-    public UserMeal save(UserMeal userMeal) {
-        return repository.save(userMeal);
+    public UserMeal save(UserMeal userMeal, int userId) {
+        return repository.save(userMeal, userId);
     }
 
     @Override
-    public void delete(int id) throws NotFoundException {
-        ExceptionUtil.check(repository.delete(id), id);
+    public void delete(int id, int userId) throws NotFoundException {
+        ExceptionUtil.check(repository.delete(id, userId), id);
     }
 
     @Override
-    public void update(UserMeal userMeal) throws NotFoundException {
-        ExceptionUtil.check(repository.save(userMeal), userMeal.getId());
+    public void update(UserMeal userMeal, int userId) throws NotFoundException {
+        ExceptionUtil.check(repository.save(userMeal, userId), userMeal.getId());
     }
 
     @Override
-    public UserMeal get(int id) throws NotFoundException {
-        return ExceptionUtil.check(repository.get(id), id);
+    public UserMeal get(int id, int userId) throws NotFoundException {
+        return ExceptionUtil.check(repository.get(id, userId), id);
     }
 
     @Override
@@ -51,8 +51,13 @@ public class UserMealServiceImpl implements UserMealService{
     }
 
     @Override
-    public List<UserMeal> filter(Date start, Date end) {
-        return repository.filter(start, end);
+    public List<UserMeal> filter(Date start, Date end, int userId) {
+        return repository.filter(start, end, userId);
+    }
+
+    @Override
+    public boolean deleteAll(int userId) {
+        return repository.deleteAll(userId);
     }
 
 }

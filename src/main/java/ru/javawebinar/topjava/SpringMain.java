@@ -28,6 +28,7 @@ public class SpringMain {
             userMeal.setCalories((short) 450);
             userMealController.update(userMeal);
             userMealController.delete(2);
+            userMealController.deleteAll();
             userMealController.getAll();
             userMealController.get(1);
             Calendar calendar = Calendar.getInstance();
@@ -36,6 +37,7 @@ public class SpringMain {
             calendar.set(2015, 02, 10, 14, 21);
             Date end = calendar.getTime();
             userMealController.filter(start, end);
+            appCtx.close();
         }
     }
 }

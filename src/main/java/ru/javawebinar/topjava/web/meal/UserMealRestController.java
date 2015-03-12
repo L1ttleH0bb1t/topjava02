@@ -25,22 +25,27 @@ public class UserMealRestController {
     public UserMeal create(UserMeal userMeal) {
         LOG.debug("create " + userMeal);
         userMeal.setId(1);
-        return service.save(userMeal);
+        return service.save(userMeal, LoggedUser.id());
     }
 
     public void delete(int id) {
         LOG.debug("delete " + id);
-        service.delete(id);
+        service.delete(id, LoggedUser.id());
+    }
+
+    public boolean deleteAll() {
+        LOG.debug("delete All");
+        return  service.deleteAll(LoggedUser.id());
     }
 
     public void update(UserMeal userMeal) {
         LOG.debug("update " + userMeal);
-        service.update(userMeal);
+        service.update(userMeal, LoggedUser.id());
     }
 
     public UserMeal get(int id) {
         LOG.debug("get " + id);
-        return service.get(id);
+        return service.get(id, LoggedUser.id());
     }
 
     public List<UserMeal> getAll() {
@@ -49,8 +54,8 @@ public class UserMealRestController {
     }
 
     public List<UserMeal> filter(Date start, Date end) {
-        LOG.debug("filter");
-        return service.filter(start, end);
+        LOG.debug("filter " + start + " " + end);
+        return service.filter(start, end, LoggedUser.id());
     }
 
 }
