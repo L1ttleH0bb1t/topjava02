@@ -10,16 +10,19 @@ import java.util.Set;
  */
 public class User extends NamedEntity {
 
-    private String email;
+    protected String email;
 
     //  Length(min = 5)
-    private String password;
+    protected String password;
 
-    private boolean enabled = true;
+    protected boolean enabled = true;
 
-    private Date registered;
+    protected Date registered;
 
-    private Set<Role> roles;
+    protected Set<Role> roles;
+
+    public User() {
+    }
 
     public User(User u) {
         this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.isEnabled(), u.getRoles());
