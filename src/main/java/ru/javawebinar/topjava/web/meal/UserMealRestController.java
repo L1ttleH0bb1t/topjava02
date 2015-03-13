@@ -24,7 +24,6 @@ public class UserMealRestController {
 
     public UserMeal create(UserMeal userMeal) {
         LOG.debug("create " + userMeal);
-        userMeal.setId(1);
         return service.save(userMeal, LoggedUser.id());
     }
 
