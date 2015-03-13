@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.model;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
@@ -20,17 +19,22 @@ public class User extends NamedEntity {
 
     private Date registered;
 
-    private Set<Role> authorities;
+    private Set<Role> roles;
 
-    public User() {
+    public User(User u) {
+        this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.isEnabled(), u.getRoles());
     }
 
-    public User(String name, String email, String password, Role role, Role... roles) {
-        super(name);
+    public User(Integer id, String name, String email, String password, boolean enabled, Role role, Role... roles) {
+        this(id, name, email, password, enabled, EnumSet.of(role, roles));
+    }
+
+    public User(Integer id, String name, String email, String password, boolean enabled, Set<Role> roles) {
+        super(id, name);
         this.email = email;
         this.password = password;
-        this.enabled = true;
-        this.authorities = EnumSet.of(role, roles);
+        this.enabled = enabled;
+        this.roles = roles;
     }
 
     public String getEmail() {
@@ -57,20 +61,12 @@ public class User extends NamedEntity {
         this.enabled = enabled;
     }
 
-    public void addAuthority(Role authority) {
-        if (authorities == null) {
-            authorities = EnumSet.of(authority);
-        } else {
-            authorities.add(authority);
-        }
-    }
-
     public boolean isEnabled() {
         return enabled;
     }
 
-    public Collection<Role> getAuthorities() {
-        return authorities;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
     public String getPassword() {
@@ -79,12 +75,12 @@ public class User extends NamedEntity {
 
     @Override
     public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
+        return "User (" +
+                "id=" + id +
+                ", email=" + email +
+                ", name=" + name +
                 ", enabled=" + enabled +
-                ", registered=" + registered +
-                "}";
+                ", roles=" + roles +
+                ')';
     }
 }
