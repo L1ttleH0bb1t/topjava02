@@ -53,9 +53,9 @@ public class UserMealRestController {
         return service.getAll(LoggedUser.id());
     }
 
-    public List<UserMeal> filter(Date start, Date end) {
+    public List<UserMeal> filterByDate(Date start, Date end) {
         LOG.debug("filter " + start + " " + end);
-        return service.filter(start, end, LoggedUser.id());
+        return service.filterByDate(start, end, LoggedUser.id());
     }
 
 }

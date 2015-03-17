@@ -1,8 +1,11 @@
 package ru.javawebinar.topjava.model;
 
 import ru.javawebinar.topjava.LoggedUser;
+import ru.javawebinar.topjava.util.TimeUtil;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * GKislin
@@ -10,16 +13,28 @@ import java.util.Date;
  */
 public class UserMeal extends BaseEntity {
 
-    private String meal;
+    protected String meal;
 
-    private Short calories;
+    protected Short calories;
 
-    private Date date;
+    protected Date date;
 
-    private Integer userId;
+    protected Integer userId;
 
     public UserMeal() {
 
+    }
+
+    public UserMeal(UserMeal meal) {
+        this(meal.getId(), meal.getMeal(), meal.getCalories(), meal.getDate(), meal.getUserId());
+    }
+
+    public UserMeal(Integer id, String meal, Short calories, Date date, Integer userId) {
+        this.id = id;
+        this.meal = meal;
+        this.calories = calories;
+        this.date = date;
+        this.userId = userId;
     }
 
     public UserMeal(String meal, Short calories, Date date, Integer userId) {
@@ -38,9 +53,10 @@ public class UserMeal extends BaseEntity {
     @Override
     public String toString() {
         return "UserMeal{" +
-                "meal='" + meal + '\'' +
+                "id=" + id +
+                ", meal=" + meal +
                 ", calories=" + calories +
-                ", date=" + date +
+                ", date=" + TimeUtil.toString(date) +
                 ", userId=" + userId +
                 "}";
     }

@@ -23,6 +23,6 @@ public interface UserMealService {
 
     public List<UserMeal> getAll(int userId);
 
-    public List<UserMeal> filter(Date start, Date end, int userId);
+    public List<UserMeal> filterByDate(Date start, Date end, int userId);
 
 }

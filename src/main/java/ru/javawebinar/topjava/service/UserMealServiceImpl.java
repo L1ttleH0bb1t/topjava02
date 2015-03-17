@@ -51,8 +51,8 @@ public class UserMealServiceImpl implements UserMealService{
     }
 
     @Override
-    public List<UserMeal> filter(Date start, Date end, int userId) {
-        return repository.filter(start, end, userId);
+    public List<UserMeal> filterByDate(Date start, Date end, int userId) {
+        return repository.filterByDate(start, end, userId);
     }
 
     @Override

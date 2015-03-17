@@ -42,7 +42,7 @@ public class MockUserMealRepository implements UserMealRepository{
     }
 
     @Override
-    public List<UserMeal> filter(Date start, Date end, int userId) {
+    public List<UserMeal> filterByDate(Date start, Date end, int userId) {
         LOG.debug("filter " + start + " " + end);
         return Collections.emptyList();
     }
