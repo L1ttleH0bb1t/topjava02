@@ -14,9 +14,8 @@ import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.util.DbPopulator;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static ru.javawebinar.topjava.UserTestData.*;
@@ -44,15 +43,16 @@ public class UserMealServiceTest {
 
     @Test
     public void testSave() throws Exception {
-        MealTestData.TestMeal testMeal = TEA;
-        UserMeal created = service.save(testMeal.asMeal(), USER.getId());
+        UserMeal testMeal = new UserMeal(
+                "Чай", (short) 50, initDateTime(2015, 02, 16, 21, 14), USER.getId());
+        UserMeal created = service.save(testMeal, USER.getId());
         testMeal.setId(created.getId());
         MealTestData.MATCHER.assertListEquals(Arrays.asList(FISH, SALAD, testMeal), service.getAll(USER.getId()));
     }
 
     @Test
-    public void testDelete() {
-        service.delete(BaseEntity.START_SEQ + 3, USER.getId());
+    public void testDelete() throws Exception {
+        service.delete(BaseEntity.START_SEQ + 2, USER.getId());
         MealTestData.MATCHER.assertListEquals(Arrays.asList(FISH), service.getAll(USER.getId()));
     }
 
@@ -62,23 +62,23 @@ public class UserMealServiceTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void testDeleteNotMy() {
+    public void testDeleteNotMy() throws Exception {
         service.delete(BaseEntity.START_SEQ + 3, ADMIN.getId());
     }
 
     @Test
-    public void deleteAll() {
+    public void deleteAll() throws Exception {
         service.deleteAll(USER.getId());
         MealTestData.MATCHER.assertListEquals(Arrays.asList(), service.getAll(USER.getId()));
     }
 
     @Test
     public void testGet() throws Exception {
-        UserMeal userMeal = service.get(BaseEntity.START_SEQ + 3, USER.getId());
+        UserMeal userMeal = service.get(BaseEntity.START_SEQ + 2, USER.getId());
         MealTestData.MATCHER.assertEquals(SALAD, userMeal);
     }
 
-    @Test(expected = EmptyResultDataAccessException.class)
+    @Test (expected = NotFoundException.class)
     public void testGetNotMy() throws Exception {
         UserMeal userMeal = service.get(BaseEntity.START_SEQ + 3, ADMIN.getId());
     }
@@ -91,20 +91,25 @@ public class UserMealServiceTest {
 
     @Test
     public void testUpdate() throws Exception {
-        TestMeal updated = new TestMeal(SALAD);
+        UserMeal updated = new UserMeal(SALAD);
         updated.setMeal("UpdatedMeal");
-        service.update(updated.asMeal(), USER.getId());
-        MealTestData.MATCHER.assertEquals(updated, service.get(BaseEntity.START_SEQ + 3, USER.getId()));
+        service.update(updated, USER.getId());
+        MealTestData.MATCHER.assertEquals(updated, service.get(BaseEntity.START_SEQ + 2, USER.getId()));
+    }
+
+    @Test (expected = NotFoundException.class)
+    public void testUpdateNotMy() throws Exception {
+        UserMeal updated = new UserMeal(SALAD);
+        updated.setMeal("UpdatedMeal");
+        service.update(updated, ADMIN.getId());
     }
 
     @Test
-    public void filterByDate() {
-        Calendar start = Calendar.getInstance();
-        start.set(2015, Calendar.MARCH, 16, 20, 10);
-        Calendar end = Calendar.getInstance();
-        end.set(2015, Calendar.MARCH, 17, 20, 10);
-        List<UserMeal> meals = service.filterByDate(start.getTime(), end.getTime(), USER.getId());
-        MealTestData.MATCHER.assertListEquals(Arrays.asList(SALAD), meals);
+    public void filterByDate() throws Exception {
+        LocalDateTime start = LocalDateTime.of(2015, 3, 16, 20, 10);
+        LocalDateTime end = LocalDateTime.of(2015, 3, 17, 20, 10);
+        List<UserMeal> meals = service.filterByDate(start, end, USER.getId());
+        MealTestData.MATCHER.assertListEquals(Arrays.asList(FISH), meals);
     }
 
 

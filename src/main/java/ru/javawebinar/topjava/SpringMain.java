@@ -6,6 +6,7 @@ import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.web.meal.UserMealRestController;
 import ru.javawebinar.topjava.web.user.AdminUserRestController;
 
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -26,18 +27,16 @@ public class SpringMain {
             System.out.println("-----------------------------");
             UserMealRestController userMealController = appCtx.getBean(UserMealRestController.class);
 
-            UserMeal userMeal = userMealController.create(new UserMeal("icecream", (short) 520, new Date()));
+            UserMeal userMeal = userMealController.create(new UserMeal("icecream", (short) 520, LocalDateTime.now()));
             userMeal.setCalories((short) 450);
             userMealController.update(userMeal);
             userMealController.delete(2);
             userMealController.deleteAll();
             userMealController.getAll();
             userMealController.get(1);
-            Calendar start = Calendar.getInstance();
-            start.set(2015, Calendar.MARCH, 1, 2, 23);
-            Calendar end = Calendar.getInstance();
-            end.set(2015, Calendar.MARCH, 1, 2, 23);
-            userMealController.filterByDate(start.getTime(), end.getTime());
+            LocalDateTime start = LocalDateTime.of(2015, 03, 1, 2, 23);
+            LocalDateTime end = LocalDateTime.of(2015, 03, 11, 2, 23);
+            userMealController.filterByDate(start, end);
             appCtx.close();
         }
     }

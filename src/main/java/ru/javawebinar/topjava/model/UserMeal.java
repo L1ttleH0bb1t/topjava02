@@ -1,11 +1,11 @@
 package ru.javawebinar.topjava.model;
 
-import ru.javawebinar.topjava.LoggedUser;
 import ru.javawebinar.topjava.util.TimeUtil;
 
-import java.util.Calendar;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.GregorianCalendar;
+
 
 /**
  * GKislin
@@ -17,7 +17,7 @@ public class UserMeal extends BaseEntity {
 
     protected Short calories;
 
-    protected Date date;
+    protected LocalDateTime date;
 
     protected Integer userId;
 
@@ -26,10 +26,10 @@ public class UserMeal extends BaseEntity {
     }
 
     public UserMeal(UserMeal meal) {
-        this(meal.getId(), meal.getMeal(), meal.getCalories(), meal.getDate(), meal.getUserId());
+        this(meal.getId(), meal.getMeal(), meal.getCalories(), meal.getLocalDateTime(), meal.getUserId());
     }
 
-    public UserMeal(Integer id, String meal, Short calories, Date date, Integer userId) {
+    public UserMeal(Integer id, String meal, Short calories, LocalDateTime date, Integer userId) {
         this.id = id;
         this.meal = meal;
         this.calories = calories;
@@ -37,14 +37,14 @@ public class UserMeal extends BaseEntity {
         this.userId = userId;
     }
 
-    public UserMeal(String meal, Short calories, Date date, Integer userId) {
+    public UserMeal(String meal, Short calories, LocalDateTime date, Integer userId) {
         this.meal = meal;
         this.calories = calories;
         this.date = date;
         this.userId = userId;
     }
 
-    public UserMeal(String meal, Short calories, Date date) {
+    public UserMeal(String meal, Short calories, LocalDateTime date) {
         this.meal = meal;
         this.calories = calories;
         this.date = date;
@@ -78,10 +78,18 @@ public class UserMeal extends BaseEntity {
     }
 
     public Date getDate() {
+        return Timestamp.valueOf(date);
+    }
+
+    public LocalDateTime getLocalDateTime() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Timestamp date) {
+        this.date = date.toLocalDateTime();
+    }
+
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

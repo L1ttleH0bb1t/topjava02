@@ -8,6 +8,7 @@ import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.service.UserMealService;
 import ru.javawebinar.topjava.service.UserMealServiceImpl;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class UserMealRestController {
         return service.getAll(LoggedUser.id());
     }
 
-    public List<UserMeal> filterByDate(Date start, Date end) {
+    public List<UserMeal> filterByDate(LocalDateTime start, LocalDateTime end) {
         LOG.debug("filter " + start + " " + end);
         return service.filterByDate(start, end, LoggedUser.id());
     }

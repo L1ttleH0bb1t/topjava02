@@ -10,6 +10,7 @@ import ru.javawebinar.topjava.repository.UserMealRepository;
 import ru.javawebinar.topjava.util.exception.ExceptionUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +52,7 @@ public class UserMealServiceImpl implements UserMealService{
     }
 
     @Override
-    public List<UserMeal> filterByDate(Date start, Date end, int userId) {
+    public List<UserMeal> filterByDate(LocalDateTime start, LocalDateTime end, int userId) {
         return repository.filterByDate(start, end, userId);
     }
 

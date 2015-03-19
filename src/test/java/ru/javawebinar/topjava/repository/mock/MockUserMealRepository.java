@@ -5,6 +5,7 @@ import ru.javawebinar.topjava.LoggerWrapper;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.repository.UserMealRepository;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -42,7 +43,7 @@ public class MockUserMealRepository implements UserMealRepository{
     }
 
     @Override
-    public List<UserMeal> filterByDate(Date start, Date end, int userId) {
+    public List<UserMeal> filterByDate(LocalDateTime start, LocalDateTime end, int userId) {
         LOG.debug("filter " + start + " " + end);
         return Collections.emptyList();
     }

@@ -1,23 +1,19 @@
 package ru.javawebinar.topjava.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import ru.javawebinar.topjava.LoggerWrapper;
-import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.repository.UserMealRepository;
 
 import javax.sql.DataSource;
-import java.security.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -57,9 +53,11 @@ public class JdbcUserMealRepositoryImpl implements UserMealRepository {
             Number newId = insertUserMeal.executeAndReturnKey(map);
             userMeal.setId(newId.intValue());
         } else {
-            namedParameterJdbcTemplate.update(
-                    "UPDATE meals SET meal=:meal, calories=:calories, date=:date, " +
-                    "user_id=:user_id", map);
+            int num = namedParameterJdbcTemplate.update(
+                    "UPDATE meals SET meal=:meal, calories=:calories, date=:date " +
+                    "where id=:id and user_id=:user_id", map);
+            if (num == 0)
+                userMeal = null;
         }
         return userMeal;
     }
@@ -77,24 +75,28 @@ public class JdbcUserMealRepositoryImpl implements UserMealRepository {
 
     @Override
     public UserMeal get(int id, int userId) {
-        return jdbcTemplate.queryForObject(
-                "SELECT id, meal, calories, date, user_id FROM meals " +
-                        "WHERE id = ? and user_id = ?", ROW_MAPPER, id, userId);
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT id, meal, calories, date, user_id FROM meals " +
+                            "WHERE id = ? and user_id = ?", ROW_MAPPER, id, userId);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
     public List<UserMeal> getAll(int userId) {
         return jdbcTemplate.query(
                 "SELECT id, meal, calories, date, user_id FROM meals " +
-                        "WHERE user_id=?", ROW_MAPPER, userId);
+                        "WHERE user_id=? ORDER BY date DESC", ROW_MAPPER, userId);
     }
 
     @Override
-    public List<UserMeal> filterByDate(Date start, Date end, int userId) {
+    public List<UserMeal> filterByDate(LocalDateTime start, LocalDateTime end, int userId) {
         return jdbcTemplate.query(
                 "SELECT id, meal, calories, date, user_id FROM meals " +
-                        "WHERE date >= ? and date <= ? and user_id = ?",
-                ROW_MAPPER, start, end, userId
+                        "WHERE date >= ? and date <= ? and user_id = ? ORDER BY date DESC",
+                ROW_MAPPER, Timestamp.valueOf(start), Timestamp.valueOf(end), userId
         );
     }
 }
