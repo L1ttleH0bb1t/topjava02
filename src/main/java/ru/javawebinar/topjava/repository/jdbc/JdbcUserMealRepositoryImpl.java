@@ -1,13 +1,10 @@
 package ru.javawebinar.topjava.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.*;
 import org.springframework.util.CollectionUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -16,6 +13,8 @@ import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.repository.UserMealRepository;
 
 import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.sql.Timestamp;
 import java.util.List;
@@ -29,7 +28,8 @@ import java.util.Objects;
 @Repository
 public class JdbcUserMealRepositoryImpl implements UserMealRepository {
 
-    private static final BeanPropertyRowMapper<UserMeal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(UserMeal.class);
+    private static final RowMapper<UserMeal> ROW_MAPPER = (rs, row) -> new UserMeal(rs.getInt("id"), rs.getString("meal"), rs.getShort("calories"),
+            rs.getTimestamp("date").toLocalDateTime(), rs.getInt("user_id"));
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -52,7 +52,7 @@ public class JdbcUserMealRepositoryImpl implements UserMealRepository {
                 .addValue("id", userMeal.getId())
                 .addValue("meal", userMeal.getMeal())
                 .addValue("calories", userMeal.getCalories())
-                .addValue("date", userMeal.getDate())
+                .addValue("date", Timestamp.valueOf(userMeal.getDate()))
                 .addValue("user_id", userId);
         if (userMeal.isNew()) {
             Number newId = insertUserMeal.executeAndReturnKey(map);

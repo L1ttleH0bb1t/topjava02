@@ -8,7 +8,6 @@ import ru.javawebinar.topjava.model.User;
 import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * User: gkislin
@@ -72,11 +71,6 @@ public class UserTestData {
     }
 
     public static final ModelMatcher<User, TestUser> MATCHER = new ModelMatcher<>(
-            new Function<User, TestUser>() {
-                @Override
-                public TestUser apply(User u) {
-                    return ((u instanceof TestUser) ? (TestUser) u : new TestUser(u));
-                }
-            });
+            u -> ((u instanceof TestUser) ? (TestUser) u : new TestUser(u)));
 
 }

@@ -2,7 +2,9 @@ package ru.javawebinar.topjava.service;
 
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -25,11 +27,14 @@ import static ru.javawebinar.topjava.MealTestData.*;
  */
 
 @ContextConfiguration({
-        "classpath:spring/spring-app-jdbc.xml",
+        "classpath:spring/spring-app.xml",
         "classpath:spring/spring-db.xml"
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class UserMealServiceTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Autowired
     protected UserMealService service;
 
@@ -56,13 +61,15 @@ public class UserMealServiceTest {
         MealTestData.MATCHER.assertListEquals(Arrays.asList(FISH), service.getAll(USER.getId()));
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void testNotFoundDelete() throws Exception {
+        thrown.expect(NotFoundException.class);
         service.delete(1, USER.getId());
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void testDeleteNotMy() throws Exception {
+        thrown.expect(NotFoundException.class);
         service.delete(BaseEntity.START_SEQ + 3, ADMIN.getId());
     }
 
@@ -78,8 +85,9 @@ public class UserMealServiceTest {
         MealTestData.MATCHER.assertEquals(SALAD, userMeal);
     }
 
-    @Test (expected = NotFoundException.class)
+    @Test
     public void testGetNotMy() throws Exception {
+        thrown.expect(NotFoundException.class);
         UserMeal userMeal = service.get(BaseEntity.START_SEQ + 3, ADMIN.getId());
     }
 
@@ -97,10 +105,11 @@ public class UserMealServiceTest {
         MealTestData.MATCHER.assertEquals(updated, service.get(BaseEntity.START_SEQ + 2, USER.getId()));
     }
 
-    @Test (expected = NotFoundException.class)
+    @Test
     public void testUpdateNotMy() throws Exception {
         UserMeal updated = new UserMeal(SALAD);
         updated.setMeal("UpdatedMeal");
+        thrown.expect(NotFoundException.class);
         service.update(updated, ADMIN.getId());
     }
 

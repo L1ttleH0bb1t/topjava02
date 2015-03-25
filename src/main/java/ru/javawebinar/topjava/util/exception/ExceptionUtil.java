@@ -23,7 +23,7 @@ public class ExceptionUtil {
     }
 
     public static <T> T check(T object, String msg) {
-        if (object == null) throw LOG.getNotFoundException("Not found entity with " + msg);
+        check(object != null, msg);
         return object;
     }
 }
