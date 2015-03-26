@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.model;
 
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 import ru.javawebinar.topjava.util.DateConverter;
 import ru.javawebinar.topjava.util.TimeUtil;
 
@@ -17,11 +18,11 @@ import java.util.Date;
 @Entity
 @Table(name = "MEALS")
 @NamedQueries({
-        @NamedQuery(name = UserMeal.ALL_SORTED, query = "SELECT um FROM UserMeal um WHERE um.userId=?1 ORDER BY um.date DESC"),
-        @NamedQuery(name = UserMeal.FILTER_BY_DATE, query = "SELECT um FROM UserMeal um WHERE um.userId=?1 and um.date >= ?2 and um.date <= ?3 ORDER BY um.date DESC"),
-        @NamedQuery(name = UserMeal.GET_MEAL, query = "SELECT um FROM UserMeal um WHERE um.id = ?1 and um.userId = ?2"),
-        @NamedQuery(name = UserMeal.DELETE, query = "DELETE FROM UserMeal um WHERE um.id=?1 and um.userId = ?2"),
-        @NamedQuery(name = UserMeal.DELETE_ALL, query = "DELETE FROM UserMeal um WHERE um.userId = ?1"),
+        @NamedQuery(name = UserMeal.ALL_SORTED, query = "SELECT um FROM UserMeal um WHERE um.user.id=?1 ORDER BY um.date DESC"),
+        @NamedQuery(name = UserMeal.FILTER_BY_DATE, query = "SELECT um FROM UserMeal um WHERE um.user.id=?1 and um.date >= ?2 and um.date <= ?3 ORDER BY um.date DESC"),
+        @NamedQuery(name = UserMeal.GET_MEAL, query = "SELECT um FROM UserMeal um WHERE um.id = ?1 and um.user.id = ?2"),
+        @NamedQuery(name = UserMeal.DELETE, query = "DELETE FROM UserMeal um WHERE um.id=?1 and um.user.id = ?2"),
+        @NamedQuery(name = UserMeal.DELETE_ALL, query = "DELETE FROM UserMeal um WHERE um.user.id = ?1"),
 })
 public class UserMeal extends BaseEntity {
 
@@ -42,30 +43,30 @@ public class UserMeal extends BaseEntity {
     @Convert(converter = DateConverter.class)
     protected LocalDateTime date;
 
-    @Column(name = "user_id", nullable = false)
-    protected Integer userId;
-
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
     public UserMeal() {
 
     }
 
     public UserMeal(UserMeal meal) {
-        this(meal.getId(), meal.getMeal(), meal.getCalories(), meal.getDate(), meal.getUserId());
+        this(meal.getId(), meal.getMeal(), meal.getCalories(), meal.getDate());
     }
 
-    public UserMeal(Integer id, String meal, Short calories, LocalDateTime date, Integer userId) {
+    public UserMeal(Integer id, String meal, Short calories, LocalDateTime date) {
         this.id = id;
         this.meal = meal;
         this.calories = calories;
         this.date = date;
-        this.userId = userId;
     }
 
-    public UserMeal(String meal, Short calories, LocalDateTime date, Integer userId) {
+    public UserMeal(Integer id, String meal, Short calories, LocalDateTime date, User user) {
+        this.id = id;
         this.meal = meal;
         this.calories = calories;
         this.date = date;
-        this.userId = userId;
+        this.user = user;
     }
 
     public UserMeal(String meal, Short calories, LocalDateTime date) {
@@ -81,7 +82,6 @@ public class UserMeal extends BaseEntity {
                 ", meal=" + meal +
                 ", calories=" + calories +
                 ", date=" + TimeUtil.toString(date) +
-                ", userId=" + userId +
                 "}";
     }
 
@@ -109,12 +109,11 @@ public class UserMeal extends BaseEntity {
         this.date = date;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
-
 }

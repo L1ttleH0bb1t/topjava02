@@ -29,7 +29,7 @@ import java.util.Objects;
 public class JdbcUserMealRepositoryImpl implements UserMealRepository {
 
     private static final RowMapper<UserMeal> ROW_MAPPER = (rs, row) -> new UserMeal(rs.getInt("id"), rs.getString("meal"), rs.getShort("calories"),
-            rs.getTimestamp("date").toLocalDateTime(), rs.getInt("user_id"));
+            rs.getTimestamp("date").toLocalDateTime());
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

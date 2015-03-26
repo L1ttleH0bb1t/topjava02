@@ -13,6 +13,7 @@
 
     <logger name="org.springframework.jdbc" level="debug"/>
     <logger name=" ru.javawebinar.topjava" level="DEBUG"/>
+    <logger name="ru.javawebinar.topjava.repository.jpa" level="DEBUG"/>
 
     <root level="WARN">
         <appender-ref ref="console"/>

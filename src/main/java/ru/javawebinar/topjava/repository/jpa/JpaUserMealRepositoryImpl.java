@@ -3,6 +3,8 @@ package ru.javawebinar.topjava.repository.jpa;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import ru.javawebinar.topjava.LoggerWrapper;
+import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.repository.UserMealRepository;
 
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * GKislin
@@ -20,6 +23,7 @@ import java.util.Map;
 @Repository
 @Transactional(readOnly = true)
 public class JpaUserMealRepositoryImpl implements UserMealRepository{
+    LoggerWrapper LOG = LoggerWrapper.get(JpaUserMealRepositoryImpl.class);
 
     @PersistenceContext
     private EntityManager em;
@@ -28,12 +32,15 @@ public class JpaUserMealRepositoryImpl implements UserMealRepository{
     @Transactional
     public UserMeal save(UserMeal userMeal, int userId) {
         if (userMeal.isNew()) {
-            userMeal.setUserId(userId);
+            User user = em.getReference(User.class, userId);
+            userMeal.setUser(user);
             em.persist(userMeal);
         } else {
             UserMeal ref = em.getReference(UserMeal.class, userMeal.getId());
-            if (ref == null || ref.getUserId() != userId)
+            if (ref == null || ref.getUser().getId() != userId)
                 return null;
+            LOG.debug("user = " + ref.getUser());
+            userMeal.setUser(ref.getUser());
             em.merge(userMeal);
         }
         return userMeal;

@@ -49,7 +49,7 @@ public class UserMealServiceTest {
     @Test
     public void testSave() throws Exception {
         UserMeal testMeal = new UserMeal(
-                "Чай", (short) 50, initDateTime(2015, 02, 16, 21, 14), USER.getId());
+                "Чай", (short) 50, initDateTime(2015, 02, 16, 21, 14));
         UserMeal created = service.save(testMeal, USER.getId());
         testMeal.setId(created.getId());
         MealTestData.MATCHER.assertListEquals(Arrays.asList(FISH, SALAD, testMeal), service.getAll(USER.getId()));
