@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.repository.jpa;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import ru.javawebinar.topjava.LoggerWrapper;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.model.UserMeal;
@@ -11,10 +10,7 @@ import ru.javawebinar.topjava.repository.UserMealRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * GKislin
@@ -31,16 +27,13 @@ public class JpaUserMealRepositoryImpl implements UserMealRepository{
     @Override
     @Transactional
     public UserMeal save(UserMeal userMeal, int userId) {
+        User ref = em.getReference(User.class, userId);
+        userMeal.setUser(ref);
         if (userMeal.isNew()) {
-            User user = em.getReference(User.class, userId);
-            userMeal.setUser(user);
             em.persist(userMeal);
         } else {
-            UserMeal ref = em.getReference(UserMeal.class, userMeal.getId());
-            if (ref == null || ref.getUser().getId() != userId)
+            if (get(userMeal.getId(), userId) == null)
                 return null;
-            LOG.debug("user = " + ref.getUser());
-            userMeal.setUser(ref.getUser());
             em.merge(userMeal);
         }
         return userMeal;
