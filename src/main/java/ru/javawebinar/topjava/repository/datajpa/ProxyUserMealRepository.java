@@ -42,8 +42,5 @@ public interface ProxyUserMealRepository extends JpaRepository<UserMeal, Integer
                                 @Param("startDate") LocalDateTime startDate,
                                 @Param("endDate") LocalDateTime endDate);
 
-    @Query("SELECT u FROM User u WHERE u.id=:userId")
-    User findOneUser(@Param("userId") int userId);
-
 
 }
