@@ -1,6 +1,9 @@
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.LocalDateTime" %>
 
 
 <html>
@@ -23,7 +26,13 @@
 
             <tr>
                 <td>
-                    ${meal.formatedDate}
+                    <%!
+                        String formateDate(LocalDateTime date) {
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:m dd-MMMM-yyyy ");
+                            return date.format(formatter);
+                        }
+                    %>
+                    <%= formateDate(meal.getDate()) %>
                 </td>
                 <td>${meal.meal}</td>
                 <td>${meal.calories}</td>

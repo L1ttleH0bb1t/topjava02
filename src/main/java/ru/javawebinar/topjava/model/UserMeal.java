@@ -106,11 +106,6 @@ public class UserMeal extends BaseEntity {
         return date;
     }
 
-    public String getFormatedDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:m dd-MMMM-yyyy ");
-        return date.format(formatter);
-    }
-
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
