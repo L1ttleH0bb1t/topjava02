@@ -8,6 +8,7 @@ import ru.javawebinar.topjava.util.TimeUtil;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 
@@ -103,6 +104,11 @@ public class UserMeal extends BaseEntity {
 
     public LocalDateTime getDate() {
         return date;
+    }
+
+    public String getFormatedDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:m dd-MMMM-yyyy ");
+        return date.format(formatter);
     }
 
     public void setDate(LocalDateTime date) {

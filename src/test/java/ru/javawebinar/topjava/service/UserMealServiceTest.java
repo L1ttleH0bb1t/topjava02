@@ -27,74 +27,57 @@ import static ru.javawebinar.topjava.MealTestData.*;
  * Created by eugene on 16.03.15.
  */
 
-@ContextConfiguration({
-        "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
-})
-@RunWith(SpringJUnit4ClassRunner.class)
-public abstract class UserMealServiceTest {
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
-    @Autowired
-    protected UserMealService service;
-
-    @Autowired
-    private DbPopulator dbPopulator;
-
-    @Before
-    public void setUp() throws Exception {
-        dbPopulator.execute();
-    }
+public abstract class UserMealServiceTest extends DbTest{
 
     @Test
     public void testSave() throws Exception {
         UserMeal testMeal = new UserMeal(
                 "Чай", (short) 50, initDateTime(2015, 02, 16, 21, 14));
-        UserMeal created = service.save(testMeal, USER.getId());
+        UserMeal created = userMealService.save(testMeal, USER.getId());
         testMeal.setId(created.getId());
-        MealTestData.MATCHER.assertListEquals(Arrays.asList(FISH, SALAD, testMeal), service.getAll(USER.getId()));
+        MealTestData.MATCHER.assertListEquals(Arrays.asList(FISH, SALAD, testMeal), userMealService.getAll(USER.getId()));
     }
 
     @Test
     public void testDelete() throws Exception {
-        service.delete(BaseEntity.START_SEQ + 2, USER.getId());
-        MealTestData.MATCHER.assertListEquals(Arrays.asList(FISH), service.getAll(USER.getId()));
+        userMealService.delete(BaseEntity.START_SEQ + 2, USER.getId());
+        MealTestData.MATCHER.assertListEquals(Arrays.asList(FISH), userMealService.getAll(USER.getId()));
     }
 
     @Test
     public void testNotFoundDelete() throws Exception {
         thrown.expect(NotFoundException.class);
-        service.delete(1, USER.getId());
+        userMealService.delete(1, USER.getId());
     }
 
     @Test
     public void testDeleteNotMy() throws Exception {
         thrown.expect(NotFoundException.class);
-        service.delete(BaseEntity.START_SEQ + 3, ADMIN.getId());
+        userMealService.delete(BaseEntity.START_SEQ + 3, ADMIN.getId());
     }
 
     @Test
     public void deleteAll() throws Exception {
-        service.deleteAll(USER.getId());
-        MealTestData.MATCHER.assertListEquals(Arrays.asList(), service.getAll(USER.getId()));
+        userMealService.deleteAll(USER.getId());
+        MealTestData.MATCHER.assertListEquals(Arrays.asList(), userMealService.getAll(USER.getId()));
     }
 
     @Test
     public void testGet() throws Exception {
-        UserMeal userMeal = service.get(BaseEntity.START_SEQ + 2, USER.getId());
+        UserMeal userMeal = userMealService.get(BaseEntity.START_SEQ + 2, USER.getId());
         MealTestData.MATCHER.assertEquals(SALAD, userMeal);
     }
 
     @Test
     public void testGetNotMy() throws Exception {
         thrown.expect(NotFoundException.class);
-        UserMeal userMeal = service.get(BaseEntity.START_SEQ + 3, ADMIN.getId());
+        UserMeal userMeal = userMealService.get(BaseEntity.START_SEQ + 3, ADMIN.getId());
     }
 
     @Test
     public void testGetAll() throws Exception {
-        List<UserMeal> all = service.getAll(USER.getId());
+        List<UserMeal> all = userMealService.getAll(USER.getId());
         MealTestData.MATCHER.assertListEquals(Arrays.asList(FISH, SALAD), all);
     }
 
@@ -102,8 +85,8 @@ public abstract class UserMealServiceTest {
     public void testUpdate() throws Exception {
         UserMeal updated = new UserMeal(SALAD);
         updated.setMeal("UpdatedMeal");
-        service.update(updated, USER.getId());
-        MealTestData.MATCHER.assertEquals(updated, service.get(BaseEntity.START_SEQ + 2, USER.getId()));
+        userMealService.update(updated, USER.getId());
+        MealTestData.MATCHER.assertEquals(updated, userMealService.get(BaseEntity.START_SEQ + 2, USER.getId()));
     }
 
     @Test
@@ -111,14 +94,14 @@ public abstract class UserMealServiceTest {
         UserMeal updated = new UserMeal(SALAD);
         updated.setMeal("UpdatedMeal");
         thrown.expect(NotFoundException.class);
-        service.update(updated, ADMIN.getId());
+        userMealService.update(updated, ADMIN.getId());
     }
 
     @Test
     public void filterByDate() throws Exception {
         LocalDateTime start = LocalDateTime.of(2015, 3, 16, 20, 10);
         LocalDateTime end = LocalDateTime.of(2015, 3, 17, 20, 10);
-        List<UserMeal> meals = service.filterByDate(start, end, USER.getId());
+        List<UserMeal> meals = userMealService.filterByDate(start, end, USER.getId());
         MealTestData.MATCHER.assertListEquals(Arrays.asList(FISH), meals);
     }
 

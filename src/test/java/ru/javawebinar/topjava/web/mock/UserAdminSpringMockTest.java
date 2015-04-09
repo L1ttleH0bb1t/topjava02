@@ -14,7 +14,7 @@ import ru.javawebinar.topjava.web.user.AdminUserRestController;
  * GKislin
  * 13.03.2015.
  */
-@ContextConfiguration({"classpath:spring/spring-app.xml", "classpath:spring/mock.xml"})
+@ContextConfiguration({"classpath:spring/spring-app.xml", "classpath:spring/mock.xml", "classpath:spring/spring-mvc.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class UserAdminSpringMockTest {
 
