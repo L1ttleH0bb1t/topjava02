@@ -26,13 +26,7 @@
 
             <tr>
                 <td>
-                    <%!
-                        String formateDate(LocalDateTime date) {
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:m dd-MMMM-yyyy ");
-                            return date.format(formatter);
-                        }
-                    %>
-                    <%= formateDate(meal.getDate()) %>
+                    <%= meal.getDate().format(DateTimeFormatter.ofPattern("H:m dd-MMMM-yyyy ")) %>
                 </td>
                 <td>${meal.meal}</td>
                 <td>${meal.calories}</td>
