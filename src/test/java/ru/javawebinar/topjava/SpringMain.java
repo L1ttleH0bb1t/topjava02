@@ -19,7 +19,7 @@ public class SpringMain {
             ctx.refresh();
             System.out.println("\n" + Arrays.toString(ctx.getBeanDefinitionNames()) + "\n");
             UserMealRestController adminController = ctx.getBean(UserMealRestController.class);
-            adminController.delete(7);
+
         }
     }
 }

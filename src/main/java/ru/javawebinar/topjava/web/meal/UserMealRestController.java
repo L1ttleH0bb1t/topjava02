@@ -1,62 +1,71 @@
 package ru.javawebinar.topjava.web.meal;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import ru.javawebinar.topjava.LoggedUser;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.LoggerWrapper;
 import ru.javawebinar.topjava.model.UserMeal;
-import ru.javawebinar.topjava.service.UserMealService;
-import ru.javawebinar.topjava.service.UserMealServiceImpl;
 
+import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
+import static ru.javawebinar.topjava.web.json.JsonUtil.CONTENT_TYPE;
+
+
 /**
- * GKislin
- * 06.03.2015.
+ * Created by eugene on 20.04.15.
  */
-@Controller
+@RestController
+@RequestMapping("/rest/profile/meals")
 public class UserMealRestController {
 
-    private LoggerWrapper LOG = LoggerWrapper.get(UserMealRestController.class);
+    private  static final LoggerWrapper LOG = LoggerWrapper.get(UserMealRestController.class);
 
     @Autowired
-    private UserMealService service;
+    private UserMealHelper helper;
 
-    public UserMeal create(UserMeal userMeal) {
-        LOG.debug("create " + userMeal);
-        return service.save(userMeal, LoggedUser.id());
+    @RequestMapping(method = RequestMethod.POST, consumes = CONTENT_TYPE, produces = "application/json; charset=utf-8")
+    public ResponseEntity<UserMeal> create(@RequestBody UserMeal userMeal) {
+        UserMeal created = helper.create(userMeal);
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/rest/profile/meals/{id}")
+                .buildAndExpand(created.getId()).toUri();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(uriOfNewResource);
+        return new ResponseEntity<>(created, httpHeaders, HttpStatus.CREATED);
     }
 
-    public void delete(int id) {
-        LOG.debug("delete " + id);
-        service.delete(id, LoggedUser.id());
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable("id") int id) {
+        helper.delete(id);
     }
 
-    public boolean deleteAll() {
-        LOG.debug("delete All");
-        return  service.deleteAll(LoggedUser.id());
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = CONTENT_TYPE)
+    public void update(@RequestBody UserMeal userMeal, @PathVariable("id") int id) {
+        helper.update(userMeal, id);
     }
 
-    public void update(UserMeal userMeal) {
-        LOG.debug("update " + userMeal);
-        service.update(userMeal, LoggedUser.id());
+    @RequestMapping(method = RequestMethod.DELETE)
+    public void deleteAll() {
+        helper.deleteAll();
     }
 
-    public UserMeal get(int id) {
-        LOG.debug("get " + id);
-        return service.get(id, LoggedUser.id());
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = CONTENT_TYPE)
+    public UserMeal get(@PathVariable("id") int id) {
+
+        return helper.get(id);
     }
 
-    public List<UserMeal> getAll() {
-        LOG.debug("getAll");
-        return service.getAll(LoggedUser.id());
-    }
+    @RequestMapping(method = RequestMethod.GET, produces = CONTENT_TYPE)
+    public List<UserMeal> getAll() { return helper.getAll(); }
 
-    public List<UserMeal> filterByDate(LocalDateTime start, LocalDateTime end) {
-        LOG.debug("filter " + start + " " + end);
-        return service.filterByDate(start, end, LoggedUser.id());
+    @RequestMapping(value = "/filter", method = RequestMethod.GET, produces = CONTENT_TYPE)
+    public List<UserMeal> filterByDate(@RequestParam("startDate")LocalDateTime startDate,
+                                       @RequestParam("endDate") LocalDateTime endDate) {
+        return helper.filterByDate(startDate, endDate);
     }
-
 }

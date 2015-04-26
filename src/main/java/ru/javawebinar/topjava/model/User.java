@@ -7,9 +7,8 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.Set;
+import javax.validation.constraints.NotNull;
+import java.util.*;
 
 /**
  * User: gkislin
@@ -43,13 +42,15 @@ public class User extends NamedEntity {
     protected boolean enabled = true;
 
     @Column(name = "registered", columnDefinition = "timestamp default now()")
-    protected Date registered;
+    @NotNull
+    protected Date registered = new Date();
 
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//    @JsonIgnore
     protected Set<Role> roles;
 
 //    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user", fetch = FetchType.LAZY)
@@ -108,6 +109,14 @@ public class User extends NamedEntity {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setRoles(Role... authorities) {
+        setRoles(Arrays.asList(authorities));
+    }
+
+    public void setRoles(Collection<Role> authorities) {
+        this.roles = Collections.unmodifiableSet(EnumSet.copyOf(authorities));
     }
 
     @Override

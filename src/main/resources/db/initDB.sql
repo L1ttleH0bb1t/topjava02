@@ -12,8 +12,8 @@ CREATE TABLE USERS
   name       VARCHAR,
   email      VARCHAR NOT NULL,
   password   VARCHAR NOT NULL,
-  registered TIMESTAMP DEFAULT now(),
-  enabled    BOOL DEFAULT TRUE
+  registered TIMESTAMP NOT NULL DEFAULT now(),
+  enabled    BOOL                DEFAULT TRUE
 );
 CREATE UNIQUE INDEX unique_email ON USERS (email);
 

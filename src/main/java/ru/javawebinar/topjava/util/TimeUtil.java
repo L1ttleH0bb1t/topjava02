@@ -1,9 +1,9 @@
 package ru.javawebinar.topjava.util;
 
-import java.text.SimpleDateFormat;
+import org.springframework.util.StringUtils;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 /**
  * GKislin
@@ -12,14 +12,19 @@ import java.util.Date;
 public class TimeUtil {
     public static final DateTimeFormatter DATE_TME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    public static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
     public static String toString(LocalDateTime ldt) {
-        return ldt == null ? "null" : ldt.format(DATE_TME_FORMATTER);
+        return toString(ldt, DATE_TME_FORMATTER);
     }
 
-    public static String toString(Date date) {
-        return formatter.format(date);
+    public static String toString(LocalDateTime ldt, DateTimeFormatter formatter) {
+        return ldt == null ? "" : ldt.format(formatter);
     }
 
+    public static LocalDateTime toDateTime(String str) {
+        return toDateTime(str, DATE_TME_FORMATTER);
+    }
+
+    public static LocalDateTime toDateTime(String str, DateTimeFormatter formatter) {
+        return StringUtils.isEmpty(str) ? LocalDateTime.now() : LocalDateTime.parse(str, formatter);
+    }
 }

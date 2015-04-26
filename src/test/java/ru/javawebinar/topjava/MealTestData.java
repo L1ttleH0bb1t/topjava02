@@ -32,6 +32,6 @@ public class MealTestData {
 
 
     public static final ModelMatcher<UserMeal, String> MATCHER = new ModelMatcher<>(
-            meal -> meal.toString());
+            meal -> meal.toString(), UserMeal.class);
 
 }
