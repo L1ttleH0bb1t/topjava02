@@ -1,0 +1,13 @@
+{
+  "bundle": "noty",
+  "assets": [
+    {
+      "name": "noty",
+      "version": "2.2.4",
+      "type": "js",
+      "locations": {
+        "webjar": "jquery.noty.packaged.min.js"
+      }
+    }
+  ]
+}

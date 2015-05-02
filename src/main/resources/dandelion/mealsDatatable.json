@@ -1,0 +1,12 @@
+{
+  "bundle" : "mealsDatatable",
+  "dependencies" : [ "topjava", "datetimepicker", "datatables", "noty"],
+  "assets": [{
+    "name": "mealsDatatable",
+    "version": "1.0.0",
+    "type": "js",
+    "locations": {
+      "webapp": "/resources/js/mealsDatatable.js"
+    }
+  }]
+}

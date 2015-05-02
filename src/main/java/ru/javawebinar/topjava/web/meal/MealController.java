@@ -9,6 +9,8 @@ import ru.javawebinar.topjava.model.BaseEntity;
 import ru.javawebinar.topjava.service.UserMealService;
 import ru.javawebinar.topjava.service.UserService;
 
+import java.time.format.DateTimeFormatter;
+
 /**
  * Created by eugene on 09.04.15.
  */
@@ -21,7 +23,8 @@ public class MealController {
     private UserService userService;
 
     @RequestMapping(value = "/meals", method = RequestMethod.GET)
-    public String userList(Model model) {
+    public String mealList(Model model) {
+        model.addAttribute("formatter", DateTimeFormatter.ofPattern("H:m dd-MMMM-yyyy "));
         model.addAttribute("meals", userMealService.getAll(BaseEntity.START_SEQ));
         model.addAttribute("userName", userService.get(BaseEntity.START_SEQ).getName());
         return "mealsList";

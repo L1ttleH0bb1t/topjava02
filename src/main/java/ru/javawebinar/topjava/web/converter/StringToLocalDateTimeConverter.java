@@ -13,6 +13,6 @@ import java.time.format.DateTimeFormatter;
 public class StringToLocalDateTimeConverter implements Converter<String, LocalDateTime> {
     @Override
     public LocalDateTime convert(String param) {
-        return TimeUtil.toDateTime(param, DateTimeFormatter.ISO_DATE_TIME);
+        return TimeUtil.toDateTime(param);
     }
 }
