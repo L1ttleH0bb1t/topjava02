@@ -14,6 +14,8 @@ import ru.javawebinar.topjava.service.UserService;
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+
 /**
  * User: gkislin
  * Date: 10.08.2014
@@ -38,7 +40,7 @@ abstract public class WebTest {
 
     @PostConstruct
     void postConstruct() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).apply(springSecurity()).build();
     }
 
     @Before

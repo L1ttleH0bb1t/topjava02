@@ -22,20 +22,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javawebinar.topjava.Profiles.DATAJPA;
 import static ru.javawebinar.topjava.Profiles.HSQLDB;
 import static ru.javawebinar.topjava.Profiles.POSTGRES;
+import static ru.javawebinar.topjava.TestUtil.userHttpBasic;
 import static ru.javawebinar.topjava.UserTestData.*;
 import static ru.javawebinar.topjava.model.BaseEntity.START_SEQ;
 
 @ActiveProfiles({POSTGRES, DATAJPA})
 public class AdminRestControllerTest extends WebTest {
 
-    public static final String REST_URL = "/rest/admin/users/";
+    public static final String REST_URL = AdminRestController.REST_URL + '/';
 
     @Autowired
     private UserService service;
 
     @Test
     public void testGet() throws Exception {
-        mockMvc.perform(get(REST_URL + (START_SEQ + 1)))
+        mockMvc.perform(get(REST_URL + (START_SEQ + 1))
+                .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -43,25 +45,26 @@ public class AdminRestControllerTest extends WebTest {
     }
 
 
-    /*
-        @Test
-        public void testGetNotFound() throws Exception {
-            mockMvc.perform(get(REST_URL + (1)))
-                    .andExpect(status().isNotFound())
-                    .andDo(print())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-        }
+    @Test
+    public void testGetNotFound() throws Exception {
+        mockMvc.perform(get(REST_URL + (1))
+                .with(TestUtil.userHttpBasic(ADMIN)))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
 
-        @Test
-        public void testGetUnauth() throws Exception {
-            mockMvc.perform(get(REST_URL).contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isForbidden());
-        }
+    @Test
+    public void testGetUnauth() throws Exception {
+        mockMvc.perform(get(REST_URL).contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(USER)))
+                .andExpect(status().isForbidden());
+    }
 
-    */
     @Test
     public void testGetByEmail() throws Exception {
-        mockMvc.perform(get(REST_URL + "by?email=" + USER.getEmail()))
+        mockMvc.perform(get(REST_URL + "by?email=" + USER.getEmail())
+                .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MATCHER.contentMatcher(USER));
@@ -69,7 +72,8 @@ public class AdminRestControllerTest extends WebTest {
 
     @Test
     public void testDelete() throws Exception {
-        mockMvc.perform(delete(REST_URL + START_SEQ).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete(REST_URL + START_SEQ).contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isOk());
         MATCHER.assertListEquals(Collections.singletonList(ADMIN), service.getAll());
@@ -80,8 +84,11 @@ public class AdminRestControllerTest extends WebTest {
         User updated = USER.copyAsUser();
         updated.setName("UpdatedName");
         updated.setRoles(Role.ROLE_ADMIN);
-        mockMvc.perform(put(REST_URL + START_SEQ).contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
+        TestUtil.print(mockMvc.perform(put(REST_URL + START_SEQ)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(JsonUtil.writeValue(updated))))
+                .andDo(print())
                 .andExpect(status().isOk());
 
         MATCHER.assertEquals(updated, service.get(START_SEQ));
@@ -92,6 +99,7 @@ public class AdminRestControllerTest extends WebTest {
         TestUser expected = new TestUser("New", "new@gmail.com", "newPass", Role.ROLE_USER, Role.ROLE_ADMIN);
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
                 .content(JsonUtil.writeValue(expected.copyAsUser()))).andExpect(status().isCreated());
 
         User returned = MATCHER.fromJsonAction(action);
@@ -103,7 +111,8 @@ public class AdminRestControllerTest extends WebTest {
 
     @Test
     public void testGetAll() throws Exception {
-        TestUtil.print(mockMvc.perform(get(REST_URL).contentType(MediaType.APPLICATION_JSON))
+        TestUtil.print(mockMvc.perform(get(REST_URL).contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MATCHER.contentListMatcher(ADMIN, USER)));

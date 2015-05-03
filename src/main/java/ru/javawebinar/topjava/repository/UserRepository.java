@@ -21,4 +21,8 @@ public interface UserRepository {
     User getByEmail(String email);
 
     List<User> getAll();
+
+    default void enable(int id, boolean enable) {
+        throw new UnsupportedOperationException("Enable for this profile is not supported");
+    }
 }

@@ -55,12 +55,4 @@ public class BaseEntity {
     public int hashCode() {
         return (id == null) ? 0 : id;
     }
-
-    public void update(int id) {
-        if (isNew()) {
-            setId(id);
-        } else if (id != getId()) {
-            throw LOG.getIllegalStateException(this + " has id differed from " + id);
-        }
-    }
 }

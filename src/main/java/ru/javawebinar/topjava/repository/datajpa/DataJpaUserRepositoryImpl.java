@@ -45,4 +45,9 @@ public class DataJpaUserRepositoryImpl implements UserRepository {
     public List<User> getAll() {
         return proxy.findAll(SORT_NAME_EMAIL);
     }
+
+    @Override
+    public void enable(int id, boolean enabled) {
+        proxy.enable(id, enabled);
+    }
 }

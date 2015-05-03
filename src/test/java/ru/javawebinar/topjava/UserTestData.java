@@ -4,6 +4,7 @@ import ru.javawebinar.topjava.matcher.ModelMatcher;
 import ru.javawebinar.topjava.model.BaseEntity;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.util.PasswordUtil;
 
 import java.util.EnumSet;
 import java.util.Objects;
@@ -14,6 +15,7 @@ import java.util.Set;
  * Date: 26.08.2014
  */
 public class UserTestData {
+    private static final LoggerWrapper LOG = LoggerWrapper.get(UserTestData.class);
 
     public static final TestUser USER = new TestUser(BaseEntity.START_SEQ, "User", "user@yandex.ru", "password", true, Role.ROLE_USER);
     public static final User ADMIN = new TestUser(BaseEntity.START_SEQ + 1, "Admin", "admin@gmail.com", "admin", true, Role.ROLE_ADMIN);
@@ -63,13 +65,23 @@ public class UserTestData {
 
             TestUser that = (TestUser) o;
 
-            return Objects.equals(this.password, that.password)
-                    && Objects.equals(this.id, that.id)
+            return //comparePassword(this.password, that.password) &&
+                    Objects.equals(this.id, that.id)
                     && Objects.equals(this.name, that.name)
                     && Objects.equals(this.email, that.email)
                     && Objects.equals(this.enabled, that.enabled)
                     && Objects.equals(this.roles, that.roles);
         }
+    }
+
+    private static boolean comparePassword(String rawPassword, String password) {
+        if (PasswordUtil.isEncoded(rawPassword)) {
+            LOG.warn("Expected password couldn't be compared with actual");
+        } else if (!PasswordUtil.isMatch(rawPassword, password)) {
+            LOG.error("Password " + password + " doesn't match encoded " + password);
+            return false;
+        }
+        return true;
     }
 
     public static final ModelMatcher<User, TestUser> MATCHER = new ModelMatcher<>(

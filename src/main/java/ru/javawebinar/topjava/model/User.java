@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+import ru.javawebinar.topjava.util.AbstractUser;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -22,7 +23,7 @@ import java.util.*;
         @NamedQuery(name = User.ALL_SORTED, query = "SELECT u FROM User u LEFT JOIN FETCH u.roles ORDER BY u.name, u.email"),
 })
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class User extends NamedEntity {
+public class User extends NamedEntity implements AbstractUser {
 
     public static final String DELETE = "User.delete";
     public static final String ALL_SORTED = "User.getAllSorted";
@@ -116,7 +117,7 @@ public class User extends NamedEntity {
     }
 
     public void setRoles(Collection<Role> authorities) {
-        this.roles = Collections.unmodifiableSet(EnumSet.copyOf(authorities));
+        this.roles = EnumSet.copyOf(authorities);
     }
 
     @Override

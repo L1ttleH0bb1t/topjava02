@@ -11,21 +11,14 @@ function makeEditable(ajaxUrl) {
     form = $('#addUpdateForm');
 
     $('#add').click(function () {
-        $('#item_id').val(0);
+        form.find(":input").each(function () {
+            $(this).val("");
+        });
+        $('#id').val(0);
         $('#editRow').modal();
     });
 
-    $('.update').click(function () {
-        $('#item_id').val($(this).attr('id'));
-        updateRow($(this).attr('id'));
-        $('#editRow').modal();
-    });
-
-    $('.delete').click(function () {
-        deleteRow($(this).attr('id'));
-    });
-
-    $('#addUpdateForm').submit(function () {
+    form.submit(function () {
         save();
         return false;
     });
@@ -63,6 +56,7 @@ function updateRow(id) {
         $.each(data, function (key, value) {
             form.find("input[name='" + key + "']").val(value);
         });
+        $('#editRow').modal();
     });
 }
 
@@ -101,4 +95,23 @@ function failNoty(event, jqXHR, options, jsExc) {
         type: 'error',
         layout: 'bottomRight'
     });
+}
+
+function renderUpdateBtn(data, type, row) {
+    if (type == 'display')
+        return '<a class="btn btn-xs btn-info" onclick="updateRow(' + row.id + ')">Update</a>';
+    return data;
+}
+
+function renderDeleteBtn(data, type, row) {
+    if (type == 'display')
+        return '<a class="btn btn-xs btn-danger" onclick="deleteRow(' + row.id + ')">Delete</a>';
+    return data;
+}
+
+function renderDate(date, type, row) {
+    if (type == 'display') {
+        return '<span>' + date + '</span>';
+    }
+    return date;
 }

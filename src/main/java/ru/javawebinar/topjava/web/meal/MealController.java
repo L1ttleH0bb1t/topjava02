@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * Created by eugene on 09.04.15.
  */
-@Controller
+
 public class MealController {
     @Autowired
     private UserMealService userMealService;

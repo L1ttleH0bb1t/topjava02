@@ -19,27 +19,22 @@
         <div class="shadow">
             <h3><fmt:message key="meals.title"/></h3>
 
+            <c:set var="ajaxUrl" value="ajax/profile/meals/"/>
             <div class="view-box">
                 <a class="btn btn-sm btn-info" id="add"><fmt:message key="meals.addButton"/></a>
 
-                <datatables:table id="datatable" data="${meals}" row="meal" theme="bootstrap3"
+                <datatables:table id="datatable" url="${ajaxUrl}" row="meal" theme="bootstrap3"
                                   cssClass="table table-striped" pageable="false" info="false">
 
-                    <datatables:column title="${tableDateColumn}">
-                        ${meal.getDate().format(formatter)}
-                    </datatables:column>
+                    <datatables:column title="Date" property="date" renderFunction="renderDate" />
 
-                    <datatables:column title="${tableMealColumn}" property="meal" />
+                    <datatables:column title="Meal" property="meal" />
 
-                    <datatables:column title="${tableCaloriesColumn}" property="calories" />
+                    <datatables:column title="Calories" property="calories" />
 
-                    <datatables:column filterable="false" sortable="false">
-                        <a class="btn btn-xs btn-info update" id="${meal.id}"><fmt:message key="meals.updateButton"/></a>
-                    </datatables:column>
+                    <datatables:column sortable="false" renderFunction="renderUpdateBtn" />
 
-                    <datatables:column filterable="false" sortable="false">
-                        <a class="btn btn-xs btn-danger delete" id="${meal.id}"><fmt:message key="meals.deleteButton"/></a>
-                    </datatables:column>
+                    <datatables:column sortable="false" renderFunction="renderDeleteBtn" />
 
                 </datatables:table>
             </div>
@@ -58,7 +53,7 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" method="post" id="addUpdateForm">
-                    <input type="text" hidden="hidden" id="item_id" name="item_id">
+                    <input type="text" hidden="hidden" id="id" name="id">
 
                     <div class="form-group">
                         <label for="meal" class="control-label col-xs-3">Meal</label>

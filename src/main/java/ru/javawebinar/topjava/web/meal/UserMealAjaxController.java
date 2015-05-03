@@ -16,13 +16,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("ajax/profile/meals")
-public class UserMealAjaxController {
-
-    @Autowired
-    UserMealHelper helper;
+public class UserMealAjaxController extends AbstractMealController{
 
     @RequestMapping(method = RequestMethod.POST)
-    public void createUpdate(@RequestParam("item_id") int id,
+    public void createUpdate(@RequestParam("id") int id,
                        @RequestParam("meal") String meal,
                        @RequestParam("date") LocalDateTime date,
                        @RequestParam("calories") short calories) {
@@ -30,24 +27,24 @@ public class UserMealAjaxController {
         UserMeal userMeal = new UserMeal(meal, calories, date);
 
         if (id == 0)
-            helper.create(userMeal);
+            super.create(userMeal);
         else
-            helper.update(userMeal, id);
+            super.update(userMeal, id);
 
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = JsonUtil.CONTENT_TYPE)
     public UserMeal get(@PathVariable("id") int id) {
-        return helper.get(id);
+        return super.get(id);
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = JsonUtil.CONTENT_TYPE)
     public List<UserMeal> getAll() {
-        return helper.getAll();
+        return super.getAll();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable("id") int id) {
-        helper.delete(id);
+        super.delete(id);
     }
 }

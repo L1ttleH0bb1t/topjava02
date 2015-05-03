@@ -1,11 +1,15 @@
 package ru.javawebinar.topjava.web.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.javawebinar.topjava.model.Role;
+import org.springframework.web.bind.support.SessionStatus;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.to.UserTo;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -13,29 +17,43 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/ajax/admin/users")
-public class AdminAjaxController {
-
-    @Autowired
-    private UserHelper helper;
+public class AdminAjaxController extends AbstractUserController {
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<User> getAll() {
-        return helper.getAll();
+        return super.getAll();
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public User get(@PathVariable("id") int id) {
+        return super.get(id);
+    }
+
+    @RequestMapping(value = "/{id}/enable", method = RequestMethod.POST)
+    public void enable(@PathVariable("id") int id, @RequestParam("enabled") boolean enabled) {
+        super.enable(id, enabled);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable("id") int id) {
-        helper.delete(id);
+        super.delete(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public void update(@RequestParam("item_id") int id,
-                       @RequestParam("name") String name,
-                       @RequestParam("email") String email,
-                       @RequestParam("password") String password) {
-        if (id == 0) {
-            User user = new User(null, name, email, password, true, Role.ROLE_USER);
-            helper.create(user);
+    public ResponseEntity<String> createOrUpdate(@Valid UserTo userTo, BindingResult result, SessionStatus status) {
+        if (result.hasErrors()) {
+            // TODO change to exception handler
+            StringBuilder sb = new StringBuilder();
+            result.getFieldErrors().forEach(fe -> sb.append(fe.getField()).append(" ").append(fe.getDefaultMessage()).append("<br>"));
+            return new ResponseEntity<>(sb.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
+        } else {
+            status.setComplete();
+            if (userTo.getId() == 0) {
+                create(userTo);
+            } else {
+                update(userTo, userTo.getId());
+            }
+            return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 }

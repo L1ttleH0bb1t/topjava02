@@ -21,16 +21,13 @@ import static ru.javawebinar.topjava.web.json.JsonUtil.CONTENT_TYPE;
  */
 @RestController
 @RequestMapping("/rest/profile/meals")
-public class UserMealRestController {
+public class UserMealRestController extends AbstractMealController{
 
     private  static final LoggerWrapper LOG = LoggerWrapper.get(UserMealRestController.class);
 
-    @Autowired
-    private UserMealHelper helper;
-
-    @RequestMapping(method = RequestMethod.POST, consumes = CONTENT_TYPE, produces = "application/json; charset=utf-8")
-    public ResponseEntity<UserMeal> create(@RequestBody UserMeal userMeal) {
-        UserMeal created = helper.create(userMeal);
+    @RequestMapping(method = RequestMethod.POST, consumes = CONTENT_TYPE, produces = CONTENT_TYPE)
+    public ResponseEntity<UserMeal> createMeal(@RequestBody UserMeal userMeal) {
+        UserMeal created = super.create(userMeal);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/rest/profile/meals/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -41,31 +38,31 @@ public class UserMealRestController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable("id") int id) {
-        helper.delete(id);
+        super.delete(id);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = CONTENT_TYPE)
     public void update(@RequestBody UserMeal userMeal, @PathVariable("id") int id) {
-        helper.update(userMeal, id);
+        super.update(userMeal, id);
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
     public void deleteAll() {
-        helper.deleteAll();
+        super.deleteAll();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = CONTENT_TYPE)
     public UserMeal get(@PathVariable("id") int id) {
 
-        return helper.get(id);
+        return super.get(id);
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = CONTENT_TYPE)
-    public List<UserMeal> getAll() { return helper.getAll(); }
+    public List<UserMeal> getAll() { return super.getAll(); }
 
     @RequestMapping(value = "/filter", method = RequestMethod.GET, produces = CONTENT_TYPE)
     public List<UserMeal> filterByDate(@RequestParam("startDate")LocalDateTime startDate,
                                        @RequestParam("endDate") LocalDateTime endDate) {
-        return helper.filterByDate(startDate, endDate);
+        return super.filterByDate(startDate, endDate);
     }
 }

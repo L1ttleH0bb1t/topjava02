@@ -11,6 +11,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static ru.javawebinar.topjava.TestUtil.userHttpBasic;
+import static ru.javawebinar.topjava.UserTestData.USER;
 import static ru.javawebinar.topjava.Profiles.DATAJPA;
 import static ru.javawebinar.topjava.Profiles.POSTGRES;
 import static ru.javawebinar.topjava.MealTestData.FISH;
@@ -27,7 +29,10 @@ public class UserMealControllerTest extends WebTest{
     public void testUserMealList() throws Exception{
         mockMvc.perform(get("/meals"))
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("http://localhost/login"));
+
+                /*.andExpect(status().isOk())
                 .andExpect(view().name("mealsList"))
                 .andExpect(forwardedUrl("/WEB-INF/jsp/mealsList.jsp"))
                 .andExpect(model().attribute("meals", hasSize(2)))
@@ -42,6 +47,6 @@ public class UserMealControllerTest extends WebTest{
                                 hasProperty("id", is(START_SEQ + 2)),
                                 hasProperty("meal", is(SALAD.getMeal()))
                         )
-                )));
+                ))); */
     }
 }

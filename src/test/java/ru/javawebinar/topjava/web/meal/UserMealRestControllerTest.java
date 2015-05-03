@@ -24,6 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.Profiles.DATAJPA;
 import static ru.javawebinar.topjava.Profiles.POSTGRES;
+import static ru.javawebinar.topjava.TestUtil.userHttpBasic;
+import static ru.javawebinar.topjava.UserTestData.ADMIN;
 import static ru.javawebinar.topjava.UserTestData.USER;
 import static ru.javawebinar.topjava.model.BaseEntity.START_SEQ;
 import static ru.javawebinar.topjava.web.json.JsonUtil.CONTENT_TYPE;
@@ -45,6 +47,7 @@ public class UserMealRestControllerTest extends WebTest {
         UserMeal expected = new UserMeal(
                 "Чай", (short) 50, initDateTime(2015, 02, 16, 21, 14));
         ResultActions action = mockMvc.perform(post(URL)
+                .with(userHttpBasic(USER))
                 .contentType(CONTENT_TYPE)
                 .content(JsonUtil.writeValue(expected))).andExpect(status().isCreated());
 
@@ -57,7 +60,9 @@ public class UserMealRestControllerTest extends WebTest {
 
     @Test
     public void testDelete() throws Exception {
-        mockMvc.perform(delete(URL + (START_SEQ + 2)).contentType(CONTENT_TYPE))
+        mockMvc.perform(delete(URL + (START_SEQ + 2))
+                .with(userHttpBasic(USER))
+                .contentType(CONTENT_TYPE))
                 .andDo(print())
                 .andExpect(status().isOk());
         MATCHER.assertListEquals(Collections.singletonList(FISH), service.getAll(USER.getId()));
@@ -65,7 +70,9 @@ public class UserMealRestControllerTest extends WebTest {
 
     @Test
     public void testDeleteAll() throws Exception {
-        mockMvc.perform(delete(URL).contentType(CONTENT_TYPE))
+        mockMvc.perform(delete(URL)
+                .with(userHttpBasic(USER))
+                .contentType(CONTENT_TYPE))
                 .andDo(print())
                 .andExpect(status().isOk());
         MATCHER.assertListEquals(Collections.emptyList(), service.getAll(USER.getId()));
@@ -76,6 +83,7 @@ public class UserMealRestControllerTest extends WebTest {
         UserMeal expected = new UserMeal(SALAD);
         expected.setMeal("Борщ");
         mockMvc.perform(put(URL + (START_SEQ + 2))
+                .with(userHttpBasic(USER))
                 .contentType(CONTENT_TYPE)
                 .content(JsonUtil.writeValue(expected))).andExpect(status().isOk());
         MATCHER.assertListEquals(Arrays.asList(FISH, expected), service.getAll(USER.getId()));
@@ -83,7 +91,8 @@ public class UserMealRestControllerTest extends WebTest {
 
     @Test
     public void testGet() throws Exception {
-        mockMvc.perform(get(URL + (START_SEQ + 2)))
+        mockMvc.perform(get(URL + (START_SEQ + 2))
+                .with(userHttpBasic(USER)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentType(CONTENT_TYPE))
@@ -92,7 +101,8 @@ public class UserMealRestControllerTest extends WebTest {
 
     @Test
     public void testGetAll() throws Exception {
-        mockMvc.perform(get(URL))
+        mockMvc.perform(get(URL)
+                .with(userHttpBasic(USER)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentType(CONTENT_TYPE))
@@ -101,7 +111,8 @@ public class UserMealRestControllerTest extends WebTest {
 
     @Test
     public void testFilterByDate() throws Exception {
-        mockMvc.perform(get(URL + "filter?startDate=2015-03-15T20:14&endDate=2015-03-16T20:00"))
+        mockMvc.perform(get(URL + "filter?startDate=2015-03-15 20:14&endDate=2015-03-16 20:00")
+                .with(userHttpBasic(USER)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(CONTENT_TYPE))
                 .andExpect(MATCHER.contentListMatcher(SALAD));
