@@ -15,14 +15,18 @@
         </a>
 
         <div class="collapse navbar-collapse">
-            <form class="navbar-form navbar-right">
+            <form class="navbar-form navbar-right" action="logout" method="post">
                 <sec:authorize access="isAuthenticated()">
                     <sec:authorize access="hasRole('ROLE_ADMIN')">
                         <a class="btn btn-info" role="button" href="users"><fmt:message key="users.title"/></a>
                     </sec:authorize>
                     <a class="btn btn-info" role="button" href="profile">${userTo.name} profile</a>
-                    <a class="btn btn-primary" role="button" href="logout">Logout</a>
+                    <!--<a class="btn btn-primary" role="button" href="logout">Logout</a>-->
+                    <input type="submit" class="btn btn-primary" value="Logout" />
                 </sec:authorize>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
             </form>
         </div>
     </div>

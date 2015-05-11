@@ -18,7 +18,7 @@ abstract public class UserServiceTest extends DbTest {
 
     @Test
     public void testSave() throws Exception {
-        TestUser tu = new TestUser("New", "new@gmail.com", "newPass", Role.ROLE_USER);
+        TestUser tu = new TestUser("New", "new@gmail.com", "newPass", (short) 4000, Role.ROLE_USER);
         User created = userService.save(tu.asUser());
         tu.setId(created.getId());
         MATCHER.assertListEquals(Arrays.asList(ADMIN, tu, USER), userService.getAll());
@@ -26,7 +26,7 @@ abstract public class UserServiceTest extends DbTest {
 
     @Test(expected = DataAccessException.class)
     public void testDuplicateMailSave() throws Exception {
-        userService.save(new TestUser("Duplicate", "user@yandex.ru", "newPass", Role.ROLE_USER).asUser());
+        userService.save(new TestUser("Duplicate", "user@yandex.ru", "newPass", (short) 3200, Role.ROLE_USER).asUser());
     }
 
     @Test

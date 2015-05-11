@@ -18,6 +18,9 @@
                 <div class="form-group">
                     <input type="password" placeholder="Password" class="form-control" name='password'>
                 </div>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
                 <button type="submit" class="btn btn-success">Sign in</button>
             </form>
         </div>

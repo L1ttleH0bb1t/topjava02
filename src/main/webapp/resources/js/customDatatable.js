@@ -45,6 +45,9 @@ function deleteRow(id) {
     $.ajax({
         url: ajaxUrl + id,
         type: 'DELETE',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+        },
         success: function () {
             updateTable();
             successNoty('Deleted');
@@ -59,6 +62,9 @@ function enable(id, chkbox) {
         url: ajaxUrl + id + '/enable',
         type: 'POST',
         data: 'enabled=' + enabled,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+        },
         success: function () {
             successNoty(enabled ? 'Enabled' : 'Disabled');
         }
@@ -77,6 +83,9 @@ function save() {
     $.ajax({
         type: "POST",
         url: ajaxUrl,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+        },
         data: form.serialize(),
         success: function (data) {
             $('#editRow').modal('hide');

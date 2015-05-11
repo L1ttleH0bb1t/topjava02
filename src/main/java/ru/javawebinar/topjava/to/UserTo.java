@@ -13,10 +13,11 @@ public class UserTo implements AbstractUser, Serializable {
     public UserTo() {
     }
 
-    public UserTo(int id, String name, String email) {
+    public UserTo(int id, String name, String email, short caloriesPerDay) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.caloriesPerDay = caloriesPerDay;
     }
 
     @NotEmpty
@@ -27,6 +28,8 @@ public class UserTo implements AbstractUser, Serializable {
 
     @Size(min = 5, max = 15, message = " must between 5 and 15 characters")
     protected String password;
+
+    protected short caloriesPerDay;
 
     public Integer getId() {
         return id;
@@ -44,10 +47,16 @@ public class UserTo implements AbstractUser, Serializable {
         this.email = email;
     }
 
+    public void setCaloriesPerDay(Short caloriesPerDay) {
+        this.caloriesPerDay = caloriesPerDay;
+    }
+
     @Override
     public String getPassword() {
         return password;
     }
+
+    public Short getCaloriesPerDay() { return caloriesPerDay; }
 
     public void setPassword(String password) {
         this.password = password;
@@ -68,6 +77,7 @@ public class UserTo implements AbstractUser, Serializable {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", caloriesPerDay=" + caloriesPerDay + '\'' +
                 '}';
     }
 }

@@ -12,6 +12,7 @@ CREATE TABLE USERS
   name       VARCHAR,
   email      VARCHAR NOT NULL,
   password   VARCHAR NOT NULL,
+  calories_per_day SMALLINT,
   registered TIMESTAMP NOT NULL DEFAULT now(),
   enabled    BOOL                DEFAULT TRUE
 );

@@ -26,6 +26,69 @@ function makeEditable(ajaxUrl) {
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(event, jqXHR, options, jsExc);
     });
+
+    init();
+}
+
+function init() {
+    $('#filter').submit(function () {
+        filterTable();
+        return false;
+    });
+
+    $('.date-picker').datetimepicker({
+        timepicker: false,
+        format: 'Y-m-d'
+    });
+
+    $('.time-picker').datetimepicker({
+        datepicker: false,
+        format: 'H:i'
+    });
+
+    $('.datetime-picker').datetimepicker({
+        format: 'Y-m-d H:i'
+    });
+    coloredTable();
+}
+
+function filterTable() {
+    var frm = $('#filter');
+    $.ajax({
+        type: "POST",
+        url: frm.attr('action'),
+        data: frm.serialize(),
+        success: function(data){
+            updateByData(data);
+            coloredTable();
+        }
+    });
+}
+
+function coloredTable() {
+    $('td.limitExceeded').each(function () {
+        if ($(this).text() === 'true') {
+            $(this).parent().css("color", "red");
+        } else {
+            $(this).parent().css("color", "green");
+        }
+    });
+}
+
+function save() {
+    $.ajax({
+        type: "POST",
+        url: ajaxUrl,
+        data: form.serialize(),
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+        },
+        success: function (data) {
+            $('#editRow').modal('hide');
+            updateTable();
+            successNoty('Saved');
+        }
+    });
 }
 
 function updateTable() {
@@ -35,20 +98,16 @@ function updateTable() {
             oTable_datatable.fnAddData(item);
         });
         oTable_datatable.fnDraw();
+        coloredTable();
     });
 }
 
-function save() {
-    $.ajax({
-        type: "POST",
-        url: ajaxUrl,
-        data: form.serialize(),
-        success: function (data) {
-            $('#editRow').modal('hide');
-            updateTable();
-            successNoty('Saved');
-        }
+function updateByData(data) {
+    oTable_datatable.fnClearTable();
+    $.each(data, function (key, item) {
+        oTable_datatable.fnAddData(item);
     });
+    oTable_datatable.fnDraw();
 }
 
 function updateRow(id) {
@@ -64,6 +123,9 @@ function deleteRow(id) {
     $.ajax({
         type: "DELETE",
         url: ajaxUrl + id,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
+        },
         success: function(data) {
             updateTable();
             successNoty('Deleted');
@@ -99,13 +161,13 @@ function failNoty(event, jqXHR, options, jsExc) {
 
 function renderUpdateBtn(data, type, row) {
     if (type == 'display')
-        return '<a class="btn btn-xs btn-info" onclick="updateRow(' + row.id + ')">Update</a>';
+        return '<a class="btn btn-xs btn-info" onclick="updateRow(' + row.id + ')">' + updateButton + '</a>';
     return data;
 }
 
 function renderDeleteBtn(data, type, row) {
     if (type == 'display')
-        return '<a class="btn btn-xs btn-danger" onclick="deleteRow(' + row.id + ')">Delete</a>';
+        return '<a class="btn btn-xs btn-danger" onclick="deleteRow(' + row.id + ')">' + deleteButton + '</a>';
     return data;
 }
 

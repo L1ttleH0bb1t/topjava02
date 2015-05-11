@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.service;
 
 import ru.javawebinar.topjava.model.UserMeal;
+import ru.javawebinar.topjava.model.UserMealWithLimit;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,10 @@ public interface UserMealService {
 
     public List<UserMeal> getAll(int userId);
 
+    public List<UserMealWithLimit> getAllWithLimit(int userId, short caloriesPerDay);
+
     public List<UserMeal> filterByDate(LocalDateTime start, LocalDateTime end, int userId);
+
+    public List<UserMealWithLimit> filterByDateWithLimit(LocalDateTime start, LocalDateTime end, int userId, short caloriesPerDay);
 
 }

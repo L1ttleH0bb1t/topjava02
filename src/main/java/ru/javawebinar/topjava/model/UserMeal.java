@@ -109,6 +109,10 @@ public class UserMeal extends BaseEntity {
         return date;
     }
 
+    public String getDay() {
+        return date.toLocalDate().toString();
+    }
+
     public void setDate(LocalDateTime date) {
         this.date = date;
     }

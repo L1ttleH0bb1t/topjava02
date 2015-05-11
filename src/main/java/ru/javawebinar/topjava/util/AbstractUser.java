@@ -21,4 +21,8 @@ public interface AbstractUser {
     String getPassword();
 
     void setPassword(String password);
+
+    Short getCaloriesPerDay();
+
+    void setCaloriesPerDay(Short caloriesPerDay);
 }

@@ -55,6 +55,10 @@ public class LoggedUser implements UserDetails, Serializable {
         return get().userTo.getId();
     }
 
+    public static short caloriesPerDay() {
+        return get().userTo.getCaloriesPerDay();
+    }
+
     @Override
     public Set<Role> getAuthorities() {
         return roles;
@@ -68,6 +72,10 @@ public class LoggedUser implements UserDetails, Serializable {
     @Override
     public String getUsername() {
         return userTo.getEmail();
+    }
+
+    public Short getCaloriesPerDay() {
+        return userTo.getCaloriesPerDay();
     }
 
     @Override

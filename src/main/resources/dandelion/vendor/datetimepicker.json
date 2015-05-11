@@ -1,6 +1,6 @@
 {
-  "bundle": "datetimepicker",
-  "dependencies": ["jquery"],
+  "bundle" : "datetimepicker",
+  "dependencies": [ "jquery" ],
   "assets": [
     {
       "name": "datetimepicker",

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.javawebinar.topjava.LoggedUser;
 import ru.javawebinar.topjava.LoggerWrapper;
 import ru.javawebinar.topjava.model.UserMeal;
+import ru.javawebinar.topjava.model.UserMealWithLimit;
 import ru.javawebinar.topjava.service.UserMealService;
 import ru.javawebinar.topjava.to.DateTimeFilter;
 import ru.javawebinar.topjava.web.ExceptionInfoHandler;
@@ -35,10 +36,24 @@ public class AbstractMealController extends ExceptionInfoHandler {
         return service.getAll(userId);
     }
 
+    public List<UserMealWithLimit> getAllWithLimit() {
+        int userId = LoggedUser.id();
+        short caloriesPerDay = LoggedUser.caloriesPerDay();
+        LOG.info("getAllWithLimit for User {}", userId);
+        return service.getAllWithLimit(userId, caloriesPerDay);
+    }
+
     public List<UserMeal> filterByDate(LocalDateTime startDate, LocalDateTime endDate) {
         int userId = LoggedUser.id();
         LOG.info("getBetween {} and {} for User {}", startDate, endDate, userId);
         return service.filterByDate(startDate, endDate, userId);
+    }
+
+    public List<UserMealWithLimit> filterByDateWithLimit(LocalDateTime startDate, LocalDateTime endDate) {
+        int userId = LoggedUser.id();
+        short caloriesPerDay = LoggedUser.caloriesPerDay();
+        LOG.info("getBetweenWithLimit {} and {} for User {}", startDate, endDate, userId);
+        return service.filterByDateWithLimit(startDate, endDate, userId, caloriesPerDay);
     }
 
     public void deleteAll() {

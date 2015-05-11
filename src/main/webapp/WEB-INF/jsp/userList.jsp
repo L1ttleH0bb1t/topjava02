@@ -7,6 +7,12 @@
 <html>
 <dandelion:bundle includes="topjavaDatatable"/>
 <jsp:include page="fragments/headTag.jsp"/>
+
+<head>
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
+</head>
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <div class="jumbotron">
@@ -23,6 +29,7 @@
 
                     <datatables:column title="Name" sortInitDirection="asc" property="name"/>
                     <datatables:column title="Email" property="email" renderFunction="renderEmail"/>
+                    <datatables:column title="Calories per day" property="caloriesPerDay"/>
                     <datatables:column title="Roles" property="roles"/>
                     <datatables:column title="Active" filterable="false" property="enabled" renderFunction="renderCheckbox"/>
                     <datatables:column title="Registered" filterable="false" property="registered" renderFunction="renderDate"/>
@@ -63,6 +70,14 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="caloriesPerDay" class="control-label col-xs-3">Calories per day</label>
+
+                        <div class="col-xs-9">
+                            <input type="number" class="form-control" id="caloriesPerDay" name="caloriesPerDay" min="1" placeholder="Calories per day">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label for="password" class="control-label col-xs-3">Password</label>
 
                         <div class="col-xs-9">
@@ -83,6 +98,10 @@
 </body>
 <script type="text/javascript">
     var ajaxUrl = '${ajaxUrl}';
+
+    var token = $("meta[name='_csrf']").attr("content");
+
+    var header = $("meta[name='_csrf_header']").attr("content");
 
     function init() {
         checkedUsers();

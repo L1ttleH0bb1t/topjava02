@@ -39,6 +39,9 @@ public class User extends NamedEntity implements AbstractUser {
     @Length(min = 5)
     protected String password;
 
+    @Column(name = "calories_per_day", nullable = true)
+    protected Short caloriesPerDay;
+
     @Column(name = "enabled", nullable = false)
     protected boolean enabled = true;
 
@@ -61,17 +64,18 @@ public class User extends NamedEntity implements AbstractUser {
     }
 
     public User(User u) {
-        this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.isEnabled(), u.getRoles());
+        this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.getCaloriesPerDay(), u.isEnabled(), u.getRoles());
     }
 
-    public User(Integer id, String name, String email, String password, boolean enabled, Role role, Role... roles) {
-        this(id, name, email, password, enabled, EnumSet.of(role, roles));
+    public User(Integer id, String name, String email, String password, Short caloriesPerDay, boolean enabled, Role role, Role... roles) {
+        this(id, name, email, password, caloriesPerDay, enabled, EnumSet.of(role, roles));
     }
 
-    public User(Integer id, String name, String email, String password, boolean enabled, Set<Role> roles) {
+    public User(Integer id, String name, String email, String password, Short caloriesPerDay, boolean enabled, Set<Role> roles) {
         super(id, name);
         this.email = email;
         this.password = password;
+        this.caloriesPerDay = caloriesPerDay;
         this.enabled = enabled;
         this.roles = roles;
     }
@@ -118,6 +122,14 @@ public class User extends NamedEntity implements AbstractUser {
 
     public void setRoles(Collection<Role> authorities) {
         this.roles = EnumSet.copyOf(authorities);
+    }
+
+    public Short getCaloriesPerDay() {
+        return caloriesPerDay;
+    }
+
+    public void setCaloriesPerDay(Short caloriesPerDay) {
+        this.caloriesPerDay = caloriesPerDay;
     }
 
     @Override

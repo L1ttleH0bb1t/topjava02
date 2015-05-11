@@ -55,6 +55,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
                 .addValue("name", user.getName())
                 .addValue("email", user.getEmail())
                 .addValue("password", user.getPassword())
+                .addValue("calories_per_day", user.getCaloriesPerDay())
                 .addValue("registered", user.getRegistered())
                 .addValue("enabled", user.isEnabled());
 
@@ -66,7 +67,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
             deleteRoles(user);
             insertRoles(user);
             namedParameterJdbcTemplate.update(
-                    "UPDATE users SET name=:name, email=:email, password=:password, " +
+                    "UPDATE users SET name=:name, email=:email, password=:password, calories_per_day=:calories_per_day, " +
                             "enabled=:enabled WHERE id=:id", map);
         }
         return user;
@@ -82,7 +83,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
     @Transactional(readOnly = true)
     public User get(int id) {
         User user = jdbcTemplate.queryForObject(
-                "SELECT id, name, email, password, registered, enabled FROM users WHERE id=?",
+                "SELECT id, name, email, password, calories_per_day, registered, enabled FROM users WHERE id=?",
                 USER_MAPPER, id);
         return setRoles(user);
     }
@@ -91,7 +92,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
     @Transactional(readOnly = true)
     public User getByEmail(String email) {
         User user = jdbcTemplate.queryForObject(
-                "SELECT id, name, email, password, registered, enabled FROM users WHERE email=?",
+                "SELECT id, name, email, password, calories_per_day, registered, enabled FROM users WHERE email=?",
                 USER_MAPPER, email);
         return setRoles(user);
     }
@@ -100,7 +101,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
     @Transactional(readOnly = true)
     public List<User> getAll() {
         final List<User> users = jdbcTemplate.query(
-                "SELECT id, name, email, password, registered, enabled FROM users ORDER BY name, email", USER_MAPPER);
+                "SELECT id, name, email, password, calories_per_day, registered, enabled FROM users ORDER BY name, email", USER_MAPPER);
 
         class UserRole {
             public UserRole(Role role, int userId) {

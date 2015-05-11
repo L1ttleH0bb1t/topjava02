@@ -96,7 +96,7 @@ public class AdminRestControllerTest extends WebTest {
 
     @Test
     public void testCreate() throws Exception {
-        TestUser expected = new TestUser("New", "new@gmail.com", "newPass", Role.ROLE_USER, Role.ROLE_ADMIN);
+        TestUser expected = new TestUser("New", "new@gmail.com", "newPass", (short) 2300, Role.ROLE_USER, Role.ROLE_ADMIN);
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN))

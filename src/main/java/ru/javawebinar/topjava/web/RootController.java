@@ -51,7 +51,7 @@ public class RootController {
 
     @RequestMapping(value = "/meals", method = RequestMethod.GET)
     public String mealList(Model model) {
-        model.addAttribute("meals", userMealService.getAll(LoggedUser.id()));
+        model.addAttribute("filter", new DateTimeFilter());
         return "mealsList";
     }
 
