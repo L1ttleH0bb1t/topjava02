@@ -1,0 +1,11 @@
+{
+  "bundle" : "common",
+  "assets": [ {
+    "name": "common",
+    "version": "1.0.0",
+    "type": "js",
+    "locations": {
+      "webapp": "/resources/js/common.js"
+    }
+  }]
+}

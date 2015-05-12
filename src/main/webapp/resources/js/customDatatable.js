@@ -1,4 +1,3 @@
-var form;
 
 function makeEditable(ajaxUrl) {
     form = $('#detailsForm')
@@ -32,30 +31,9 @@ function makeEditable(ajaxUrl) {
     init();
 }
 
-function updateRow(id) {
-    $.get(ajaxUrl + id, function (data) {
-        $.each(data, function (key, value) {
-            form.find("input[name='" + key + "']").val(value);
-        });
-        $('#editRow').modal();
-    });
-}
-
-function deleteRow(id) {
-    $.ajax({
-        url: ajaxUrl + id,
-        type: 'DELETE',
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader(header, token);
-        },
-        success: function () {
-            updateTable();
-            successNoty('Deleted');
-        }
-    });
-}
-
 function enable(id, chkbox) {
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
     var enabled = chkbox.is(":checked");
     chkbox.parent().parent().css("text-decoration", enabled ? "none" : "line-through");
     $.ajax({
@@ -68,49 +46,6 @@ function enable(id, chkbox) {
         success: function () {
             successNoty(enabled ? 'Enabled' : 'Disabled');
         }
-    });
-}
-
-function updateByData(data) {
-    oTable_datatable.fnClearTable();
-    $.each(data, function (key, item) {
-        oTable_datatable.fnAddData(item);
-    });
-    oTable_datatable.fnDraw();
-}
-
-function save() {
-    $.ajax({
-        type: "POST",
-        url: ajaxUrl,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader(header, token);
-        },
-        data: form.serialize(),
-        success: function (data) {
-            $('#editRow').modal('hide');
-            updateTable();
-            successNoty('Saved');
-        }
-    });
-}
-
-var failedNote;
-
-function closeNote() {
-    if (failedNote) {
-        failedNote.close();
-        failedNote = undefined;
-    }
-}
-
-function successNoty(text) {
-    closeNote();
-    noty({
-        text: text,
-        type: 'success',
-        layout: 'bottomRight',
-        timeout: true
     });
 }
 

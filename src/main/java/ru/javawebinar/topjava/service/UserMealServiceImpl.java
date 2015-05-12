@@ -13,7 +13,9 @@ import ru.javawebinar.topjava.util.TimeUtil;
 import ru.javawebinar.topjava.util.exception.ExceptionUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import ru.javawebinar.topjava.util.TimeUtil;
@@ -70,7 +72,7 @@ public class UserMealServiceImpl implements UserMealService{
         List<UserMeal> all = getAll(userId);
         List<UserMealWithLimit> allWithLimit = new ArrayList<>();
 
-        Map<String, Integer> sumDay = all.stream().collect(Collectors.groupingBy(UserMeal::getDay,
+        Map<LocalDate, Integer> sumDay = all.stream().collect(Collectors.groupingBy(UserMeal::getDay,
                 Collectors.summingInt(UserMeal::getCalories)));
 
 
@@ -89,25 +91,22 @@ public class UserMealServiceImpl implements UserMealService{
     @Override
     public List<UserMealWithLimit> filterByDateWithLimit(LocalDateTime start, LocalDateTime end, int userId, short caloriesPerDay) {
 
-        DateTimeFilter filter = new DateTimeFilter();
-        filter.setStartDate(start.toLocalDate().toString());
-        filter.setEndDate(end.toLocalDate().toString());
-
-        List<UserMeal> allWithoutTime = filterByDate(TimeUtil.parseStartDate(filter), TimeUtil.parseEndDate(filter), userId);
-        List<UserMeal> all = filterByDate(start, end, userId);
+        List<UserMeal> allWithoutTime = filterByDate(LocalDateTime.of(start.toLocalDate(), LocalTime.MIN), LocalDateTime.of(end.toLocalDate(), LocalTime.MAX), userId);
         List<UserMealWithLimit> allWithLimit = new ArrayList<>();
 
-        Map<String, Integer> sumDay = allWithoutTime.stream().collect(Collectors.groupingBy(UserMeal::getDay,
+        Map<LocalDate, Integer> sumDay = allWithoutTime.stream().collect(Collectors.groupingBy(UserMeal::getDay,
                 Collectors.summingInt(UserMeal::getCalories)));
 
-
-        for (UserMeal meal : all) {
-            UserMealWithLimit mealWithLimit;
-            if (sumDay.get(meal.getDay()) > caloriesPerDay)
-                mealWithLimit = new UserMealWithLimit(meal, true);
-            else
-                mealWithLimit = new UserMealWithLimit(meal, false);
-            allWithLimit.add(mealWithLimit);
+        for (UserMeal meal : allWithoutTime) {
+            LocalTime time = meal.getDate().toLocalTime();
+            if (time.compareTo(start.toLocalTime()) > - 1 && time.compareTo(end.toLocalTime()) < 1) {
+                UserMealWithLimit mealWithLimit;
+                if (sumDay.get(meal.getDay()) > caloriesPerDay)
+                    mealWithLimit = new UserMealWithLimit(meal, true);
+                else
+                    mealWithLimit = new UserMealWithLimit(meal, false);
+                allWithLimit.add(mealWithLimit);
+            }
         }
 
         return allWithLimit;

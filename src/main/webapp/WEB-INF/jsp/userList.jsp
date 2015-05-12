@@ -8,11 +8,7 @@
 <dandelion:bundle includes="topjavaDatatable"/>
 <jsp:include page="fragments/headTag.jsp"/>
 
-<head>
-    <meta name="_csrf" content="${_csrf.token}"/>
-    <!-- default header name is X-CSRF-TOKEN -->
-    <meta name="_csrf_header" content="${_csrf.headerName}"/>
-</head>
+
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <div class="jumbotron">
@@ -98,10 +94,6 @@
 </body>
 <script type="text/javascript">
     var ajaxUrl = '${ajaxUrl}';
-
-    var token = $("meta[name='_csrf']").attr("content");
-
-    var header = $("meta[name='_csrf_header']").attr("content");
 
     function init() {
         checkedUsers();

@@ -20,12 +20,6 @@
 <fmt:message key="meals.startTime" var="startTime" />
 <fmt:message key="meals.endTime" var="endTime" />
 
-<head>
-    <meta name="_csrf" content="${_csrf.token}"/>
-    <!-- default header name is X-CSRF-TOKEN -->
-    <meta name="_csrf_header" content="${_csrf.headerName}"/>
-</head>
-
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <div class="jumbotron">
@@ -140,10 +134,6 @@
     var updateButton = '${updateBtn}';
 
     var deleteButton = '${deleteBtn}';
-
-    var token = $("meta[name='_csrf']").attr("content");
-
-    var header = $("meta[name='_csrf_header']").attr("content");
 
     //        $(document).ready(function () {
 

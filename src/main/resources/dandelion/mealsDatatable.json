@@ -1,6 +1,6 @@
 {
   "bundle" : "mealsDatatable",
-  "dependencies" : [ "topjava", "datetimepicker", "datatables", "noty"],
+  "dependencies" : [ "topjava", "datetimepicker", "datatables", "noty", "common"],
   "assets": [{
     "name": "mealsDatatable",
     "version": "1.0.0",

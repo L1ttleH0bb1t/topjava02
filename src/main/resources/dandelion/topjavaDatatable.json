@@ -1,6 +1,6 @@
 {
     "bundle" : "topjavaDatatable",
-    "dependencies" : [ "topjava", "datetimepicker", "datatables", "noty"],
+    "dependencies" : [ "topjava", "datetimepicker", "datatables", "noty", "common"],
     "assets": [ {
         "name": "customDatatable",
         "version": "1.0.0",

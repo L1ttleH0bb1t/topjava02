@@ -8,6 +8,7 @@ import ru.javawebinar.topjava.util.TimeUtil;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -109,8 +110,8 @@ public class UserMeal extends BaseEntity {
         return date;
     }
 
-    public String getDay() {
-        return date.toLocalDate().toString();
+    public LocalDate getDay() {
+        return date.toLocalDate();
     }
 
     public void setDate(LocalDateTime date) {

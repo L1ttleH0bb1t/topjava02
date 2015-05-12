@@ -2,6 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <html>
@@ -11,18 +12,16 @@
     <div class="container">
         <div class="navbar-header navbar-brand"><fmt:message key="app.title"/></div>
         <div class="navbar-collapse collapse">
-            <form class="navbar-form navbar-right" role="form" action="spring_security_check" method="post">
+            <form:form class="navbar-form navbar-right" role="form" action="spring_security_check" method="post">
                 <div class="form-group">
                     <input type="text" placeholder="Email" class="form-control" name='username'>
                 </div>
                 <div class="form-group">
                     <input type="password" placeholder="Password" class="form-control" name='password'>
                 </div>
-                <input type="hidden"
-                       name="${_csrf.parameterName}"
-                       value="${_csrf.token}"/>
+
                 <button type="submit" class="btn btn-success">Sign in</button>
-            </form>
+            </form:form>
         </div>
     </div>
 </div>

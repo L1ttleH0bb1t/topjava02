@@ -2,9 +2,7 @@
  * Created by eugene on 26.04.15.
  */
 
-var failedNote;
 
-var form;
 
 function makeEditable(ajaxUrl) {
 
@@ -75,22 +73,6 @@ function coloredTable() {
     });
 }
 
-function save() {
-    $.ajax({
-        type: "POST",
-        url: ajaxUrl,
-        data: form.serialize(),
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader(header, token);
-        },
-        success: function (data) {
-            $('#editRow').modal('hide');
-            updateTable();
-            successNoty('Saved');
-        }
-    });
-}
-
 function updateTable() {
     $.get(ajaxUrl, function (data) {
         oTable_datatable.fnClearTable();
@@ -102,53 +84,7 @@ function updateTable() {
     });
 }
 
-function updateByData(data) {
-    oTable_datatable.fnClearTable();
-    $.each(data, function (key, item) {
-        oTable_datatable.fnAddData(item);
-    });
-    oTable_datatable.fnDraw();
-}
 
-function updateRow(id) {
-    $.get(ajaxUrl + id, function (data) {
-        $.each(data, function (key, value) {
-            form.find("input[name='" + key + "']").val(value);
-        });
-        $('#editRow').modal();
-    });
-}
-
-function deleteRow(id) {
-    $.ajax({
-        type: "DELETE",
-        url: ajaxUrl + id,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader(header, token);
-        },
-        success: function(data) {
-            updateTable();
-            successNoty('Deleted');
-        }
-    });
-}
-
-function closeNote() {
-    if (failedNote) {
-        failedNote.close();
-        failedNote = undefined;
-    }
-}
-
-function successNoty(text) {
-    closeNote();
-    noty({
-        text: text,
-        type: 'success',
-        layout: 'bottomRight',
-        timeout: true
-    });
-}
 
 function failNoty(event, jqXHR, options, jsExc) {
     closeNote();

@@ -2,6 +2,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <%--
 <fmt:setLocale value="ru"/>
@@ -15,7 +16,7 @@
         </a>
 
         <div class="collapse navbar-collapse">
-            <form class="navbar-form navbar-right" action="logout" method="post">
+            <form:form class="navbar-form navbar-right" action="logout" method="post">
                 <sec:authorize access="isAuthenticated()">
                     <sec:authorize access="hasRole('ROLE_ADMIN')">
                         <a class="btn btn-info" role="button" href="users"><fmt:message key="users.title"/></a>
@@ -24,10 +25,13 @@
                     <!--<a class="btn btn-primary" role="button" href="logout">Logout</a>-->
                     <input type="submit" class="btn btn-primary" value="Logout" />
                 </sec:authorize>
-                <input type="hidden"
-                       name="${_csrf.parameterName}"
-                       value="${_csrf.token}"/>
-            </form>
+
+            </form:form>
         </div>
     </div>
 </div>
+<head>
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
+</head>
