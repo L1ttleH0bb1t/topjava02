@@ -97,17 +97,10 @@ public class UserMealServiceImpl implements UserMealService{
         Map<LocalDate, Integer> sumDay = allWithoutTime.stream().collect(Collectors.groupingBy(UserMeal::getDay,
                 Collectors.summingInt(UserMeal::getCalories)));
 
-        for (UserMeal meal : allWithoutTime) {
-            LocalTime time = meal.getDate().toLocalTime();
-            if (time.compareTo(start.toLocalTime()) > - 1 && time.compareTo(end.toLocalTime()) < 1) {
-                UserMealWithLimit mealWithLimit;
-                if (sumDay.get(meal.getDay()) > caloriesPerDay)
-                    mealWithLimit = new UserMealWithLimit(meal, true);
-                else
-                    mealWithLimit = new UserMealWithLimit(meal, false);
-                allWithLimit.add(mealWithLimit);
-            }
-        }
+        allWithLimit = allWithoutTime.stream().filter(m -> m.getDate().toLocalTime().compareTo(start.toLocalTime()) > -1
+                && m.getDate().toLocalTime().compareTo(end.toLocalTime()) < 1)
+                .map(m -> sumDay.get(m.getDay()) > caloriesPerDay ? new UserMealWithLimit(m, true) : new UserMealWithLimit(m, false))
+                .collect(Collectors.toList());
 
         return allWithLimit;
 
